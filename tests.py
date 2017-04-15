@@ -42,18 +42,12 @@ def test_decodeState_probabilistic():
         counts[decodeState(q, 0)] += 1
     assert abs(counts[0] - counts[1]) < tolerance
 
-def test_encodeRawKey():
+def test_encodeBit():
     # Only test the 4 cases in our encoding strategy
-    states = []
-    states.extend(encodeRawKey([0], [0]))
-    states.extend(encodeRawKey([1], [0]))
-    states.extend(encodeRawKey([0], [1]))
-    states.extend(encodeRawKey([1], [1]))
-
-    assert(equivState(states[0], qit.state('0')))
-    assert(equivState(states[1], qit.state('1')))
-    assert(equivState(states[2], qit.state('0').u_propagate(qit.H)))
-    assert(equivState(states[3], qit.state('1').u_propagate(qit.H)))
+    assert(equivState(encodeBit(0,0), qit.state('0')))
+    assert(equivState(encodeBit(1,0), qit.state('1')))
+    assert(equivState(encodeBit(0,1), qit.state('0').u_propagate(qit.H)))
+    assert(equivState(encodeBit(1,1), qit.state('1').u_propagate(qit.H)))
 
 def test_getRandomBits():
     counts = [0, 0]

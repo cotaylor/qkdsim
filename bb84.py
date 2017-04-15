@@ -2,7 +2,7 @@ import numpy as np
 import qit
 from utils import *
 
-def bb84(n, verbose=True, eavesdrop=True):
+def bb84(n, verbose=True, eve=True):
     """Simulation of Bennett & Brassard's 1984 protocol for quantum key distribution with
     n initial bits in the raw key.
     If eavesdrop is set to True, assumes the presence of an eavesdropper attempting an
@@ -36,13 +36,33 @@ def bb84(n, verbose=True, eavesdrop=True):
     # basis or the Hadamard basis, depending on the value of the kth bit in each bitstring
     sent_A = encodeRawKey(rawKey, bases_A)
 
+    # QKD guarantees with high probability we will detect any eavesdropping
+    if eve:
+        if verbose:
+            print("Eve intercepts each qubit as it travels to Bob. Because it is not possible"\
+                  "\nto clone quantum states, she must measure each qubit before re-sending to"\
+                  "\nBob. Every time she measures a qubit in the 'wrong' basis, she has a 50%"\
+                  "\nprobability of being detected.\n")
+
+        # No matter what strategy Eve uses to select bases, the probability she will be detected
+        # is always 1-(3/4)^n if Alice chose her bases randomly
+        bases_E = getRandomBits(n)
+        print("Eve chooses a random basis to measure each qubit in:\n%s") % bitFormat(bases_E)
+
+        # Eve measures each qubit and attempts to cover her tracks
+        for k in range(n):
+            sent_A[k] = eavesdrop(sent_A[k], bases_E[k])
+
+        if verbose: print("\nEve attempts to hide her actions by re-encoding her measurement result"\
+                          "\nbefore re-sending the qubits to Bob.\n")
+
     # Bob measures qubit each in a randomly chosen basis
     bases_B = getRandomBits(n)
     key_B = []
     for k in range(n):
         key_B.append(decodeState(sent_A[k], bases_B[k]))
 
-    print("For each qubit received, Bob randomly chooses a basis to measure in:\n%s") % bitFormat(bases_B)
+    print("Bob chooses a random basis to measure each qubit in:\n%s") % bitFormat(bases_B)
     print("Bob's measurement results:\n%s") % bitFormat(key_B)
 
     # Alice and Bob discard any bits where they chose different bases.

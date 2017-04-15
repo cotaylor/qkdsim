@@ -5,6 +5,7 @@ def bitFormat(bits):
     """Return a printable representation of the given list of bools."""
     return '[' + ', '.join(['1' if elem else '0' for elem in bits]) + ']'
 
+
 def decodeState(state, basis):
     """Return a bool corresponding to the result of measuring the given state in the given basis."""
     # Change basis if necessary
@@ -14,6 +15,26 @@ def decodeState(state, basis):
     _, result = state.measure()
     
     return bool(result)
+
+
+def eavesdrop(state, basis):
+    """Measure an intercepted quantum state in the given basis, and attempt to hide the
+    operation by re-encoding the measurement result in the same basis. Return the new state.
+    """
+    result = decodeState(state, basis)
+    newState = encodeBit(result, basis)
+
+    return newState
+
+
+def encodeBit(value, basis):
+    """Return the quantum state representing the encoding of the given binary value in the given basis"""
+    q = qit.state('0')
+    if value: q = q.u_propagate(qit.sx)    # Apply Pauli X operator to flip bit
+    if basis: q = q.u_propagate(qit.H)    # Apply Hadamard operator to change basis
+
+    return q
+        
 
 def encodeRawKey(key, bases):
     """Return a list of quantum states corresponding to individual qubits prepared using the
@@ -28,30 +49,25 @@ def encodeRawKey(key, bases):
     if (len(key) != len(bases)):
         print("Invalid args: lists must be the same length")
         return -1
-    
-    template = qit.state('0')
+
+    # Encode each bit in the chosen basis
     qs = []
     for k in range(len(key)):
-        # Create a new qubit in state |0>
-        qk = template
-
-        # Apply encoding
-        if key[k]: qk = qk.u_propagate(qit.sx)    # apply Pauli X operator to flip bit
-        if bases[k]: qk = qk.u_propagate(qit.H)    # apply Hadamard operator to change basis
-
-        qs.append(qk)
-        
+        qs.append(encodeBit(key[k], bases[k]))
     return qs
+
 
 def equivState(q1, q2):
     """Return True if q1 and q2 represent the same quantum state."""
     return np.array_equal(q1.prob(), q2.prob())
+
 
 def getRandomBits(n):
     """Return a list of n bits, each either 0 or 1 with equal probability."""
     dist = np.random.rand(n)
     bitstring = [elem > 0.5 for elem in dist]
     return bitstring
+
 
 def matchKeys(key1, key2, bases1, bases2):
     """If bases1[k] != bases2[k], discard bit k from both keys.
