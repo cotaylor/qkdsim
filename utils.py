@@ -23,7 +23,6 @@ def encodeRawKey(key, bases):
           0  |   1   | +0.7071 |0> +0.7071 |1>
           1  |   0   | +1 |1>
           1  |   1   | +0.7071 |0> -0.7071 |1>
-
     key and bases are lists of bools representing binary values
     """
     if (len(key) != len(bases)):
