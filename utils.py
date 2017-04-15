@@ -29,7 +29,7 @@ def encodeRawKey(key, bases):
         print("Invalid args: lists must be the same length")
         return -1
     
-    template = qit.state("0")
+    template = qit.state('0')
     qs = []
     for k in range(len(key)):
         # Create a new qubit in state |0>
@@ -42,6 +42,10 @@ def encodeRawKey(key, bases):
         qs.append(qk)
         
     return qs
+
+def equivState(q1, q2):
+    """Return True if q1 and q2 represent the same quantum state."""
+    return np.array_equal(q1.prob(), q2.prob())
 
 def getRandomBits(n):
     """Return a list of n bits, each either 0 or 1 with equal probability."""
