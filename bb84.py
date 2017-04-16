@@ -2,7 +2,7 @@ import numpy as np
 import qit
 from utils import *
 
-def bb84(n, verbose=True, eve=True):
+def bb84(n, verbose=True, eve=True, errorRate=0.0):
     """Simulation of Bennett & Brassard's 1984 protocol for quantum key distribution with
     n initial bits in the raw key.
     If eavesdrop is set to True, assumes the presence of an eavesdropper attempting an
@@ -58,6 +58,11 @@ def bb84(n, verbose=True, eve=True):
         if verbose: print("\nEve attempts to hide her actions by re-encoding her measurement result"\
                           "\nbefore re-sending the qubits to Bob.\n")
 
+    # Introduce error due to noise
+    for k in range(numBits):
+        p = np.random.random_sample()
+        if p < errorRate: sent_A[k] = flipState(sent_A[k])
+
     # Bob measures qubit each in a randomly chosen basis
     bases_B = getRandomBits(numBits)
     key_B = []
@@ -97,5 +102,10 @@ def bb84(n, verbose=True, eve=True):
     numBits = len(key_A)
     print("Alice's remaining %d-bit key:\n%s") % (numBits, bitFormat(key_A))
     print("Bob's remaining %d-bit key:\n%s") % (numBits, bitFormat(key_B))
+
+    # TODO: Error reconciliation
+
+    # Privacy amplification
+    
 
     return 0

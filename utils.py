@@ -76,6 +76,15 @@ def equivState(q1, q2):
     return np.array_equal(q1.prob(), q2.prob())
 
 
+def flipState(q):
+    """Perform the transformation corresponding to a bit flip on the given quantum state
+    and return it. TODO: is there a better way to simulate noise?
+    """
+    if equivState(q, qit.state('0')) or equivState(q, qit.state('1')):
+        return q.u_propagate(qit.sx)
+    else:
+        return q.u_propagate(qit.sz)
+
 def getRandomBits(n):
     """Return a list of n bits, each either 0 or 1 with equal probability."""
     dist = np.random.rand(n)
