@@ -12,6 +12,7 @@ def test_decodeState_deterministic():
     assert decodeState(q, 0) == True
     q = q.u_propagate(qit.H)
     assert decodeState(q, 1) == True
+    
 
 def test_decodeState_probabilistic():
     # Test probabilistic measurement is roughly even
@@ -42,6 +43,18 @@ def test_decodeState_probabilistic():
         counts[decodeState(q, 0)] += 1
     assert abs(counts[0] - counts[1]) < tolerance
 
+
+def test_discloseHalf():
+    numTrials = 1024
+
+    for j in range(numTrials):
+        key1 = getRandomBits(j)
+        key2 = getRandomBits(j)
+        announce1, key1, announce2, key2 = discloseHalf(key1, key2)
+        assert(len(key1) + len(announce1) == j)
+        assert(len(key2) + len(announce2) == j)
+    
+
 def test_encodeBit():
     # Only test the 4 cases in our encoding strategy
     assert(equivState(encodeBit(0,0), qit.state('0')))
@@ -49,6 +62,7 @@ def test_encodeBit():
     assert(equivState(encodeBit(0,1), qit.state('0').u_propagate(qit.H)))
     assert(equivState(encodeBit(1,1), qit.state('1').u_propagate(qit.H)))
 
+    
 def test_getRandomBits():
     counts = [0, 0]
     numBits = 1024
@@ -62,6 +76,7 @@ def test_getRandomBits():
         print(counts[0], counts[1])
         assert(abs(counts[0]-counts[1]) < tolerance)
 
+        
 def test_matchKeys():
     numTrials = 50
     numBits = 256

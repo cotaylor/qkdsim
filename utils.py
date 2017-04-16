@@ -17,6 +17,20 @@ def decodeState(state, basis):
     return bool(result)
 
 
+def discloseHalf(key1, key2):
+    """Return the tuple (announce1, keep1, announce2, keep2), where
+           announce2, announce2 = bit values to announce and discard
+           keep1, keep2 = bit values of new shared keys
+    """
+    # Disclose every other bit
+    announce1 = [key1[j] for j in range(len(key1)) if j % 2 == 0]
+    keep1 = [key1[j] for j in range(len(key1)) if j % 2]
+    announce2 = [key2[j] for j in range(len(key2)) if j % 2 == 0]
+    keep2 = [key2[j] for j in range(len(key2)) if j % 2]
+
+    return (announce1, keep1, announce2, keep2)
+
+    
 def eavesdrop(state, basis):
     """Measure an intercepted quantum state in the given basis, and attempt to hide the
     operation by re-encoding the measurement result in the same basis. Return the new state.
