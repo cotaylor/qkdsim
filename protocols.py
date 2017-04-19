@@ -1,9 +1,9 @@
 from qkdutils import *
 
-def bb84(n, verbose=True, eve=True, errorRate=0.0):
+def bb84(n, eve=False, errorRate=0.0, verbose=True):
     """Simulation of Bennett & Brassard's 1984 protocol for quantum key distribution with
     n initial bits in the raw key.
-    If eavesdrop is set to True, assumes the presence of an eavesdropper attempting an
+    If eve is set to True, assumes the presence of an eavesdropper attempting an
     intercept-resend attack.
     """
     numBits = 5 * n
@@ -73,7 +73,7 @@ def bb84(n, verbose=True, eve=True, errorRate=0.0):
     print("Bob's measurement results:\n%s") % bitFormat(key_B)
 
     # Alice and Bob discard any bits where they chose different bases.
-    key_A, key_B = matchKeys(rawKey, key_B, bases_A, bases_B)
+    key_A, key_B = matchKeysBB84(rawKey, key_B, bases_A, bases_B)
     numBits = len(key_A)
 
     if verbose:
@@ -108,14 +108,14 @@ def bb84(n, verbose=True, eve=True, errorRate=0.0):
     # TODO: Privacy amplification
     return 0
 
-def b92(n, verbose=True, eve=True, errorRate=0.0):
+def b92(n, eve=False, errorRate=0.0, verbose=True):
     """Simulation of Bennet's 1992 protocol for quantum key distribution with n initial
-    bits in the raw key. If eavesdrop is set to True, assumes the presence of an eavesdropper
+    bits in the raw key. If eve is set to True, assumes the presence of an eavesdropper
     attempting an intercept-resend attack. errorRate represents the probability that a bit
     will be flipped when Bob measures it.
     """
 
-    numBits = 5 * n
+    numBits = 8 * n
 
     if verbose:
         print("\n=====B92 protocol=====\n%d initial bits, ~%d key bits") % (numBits, n)
@@ -130,7 +130,8 @@ def b92(n, verbose=True, eve=True, errorRate=0.0):
 
     # Alice encodes each bit as a qubit as |0> in either the computational or Hadamard basis
     sent_A = encodeKeyB92(rawKey)
-    print("Alice encodes each bit according to the following strategy:"\
+    if verbose:
+        print("Alice encodes each bit according to the following strategy:"\
           "\n    value | state"\
           "\n      0   | +1 |0>"\
           "\n      1   | +0.7071 (|0> + |1>)"\
@@ -173,6 +174,40 @@ def b92(n, verbose=True, eve=True, errorRate=0.0):
     print("Bob chooses a random filter to measure each qubit with:\n%s") % bitFormat(bases_B)
     print("Bob's measurement results:\n%s") % bitFormat(key_B)
 
-    key_B = [elem for elem in key_B if elem != -1]
+    # Discard bits where Bob did not see a result
+    key_A, key_B = matchKeysB92(rawKey, key_B)
     numBits = len(key_B)
+
+    if verbose:
+        print("\nBob announces which photons were completely absorbed and"\
+          "\nAlice and Bob discard the corresponding bits from their keys.\n")
+    print("Alice's sifted key:\n%s") % bitFormat(key_A)
     print("Bob's sifted key:\n%s") % bitFormat(key_B)
+
+    # Compare key information
+    if len(key_A) != len(key_B):
+        print("\nAlice and Bob announce the lengths of their keys. Since Alice's"\
+              "\nkey is %d bits and Bob's is %d bits, they are able to detect"\
+              "\nEve's interference and abort the protocol.\n") % (len(key_A), len(key_B))
+        return 1
+
+    announce_A, key_A, announce_B, key_B = discloseHalf(key_A, key_B)
+    if verbose:
+        print("\nAlice and Bob sacrifice %d of their %d shared bits and publicly announce"\
+              "\ntheir values. They agree to disclose every other bit of their shared key.\n") % (len(announce_A), numBits)
+    print("Alice's announced bits:\n%s") % bitFormat(announce_A)
+    print("Bob's announced bits:\n%s") % bitFormat(announce_B)
+
+    # TODO: tolerance to noise
+    if announce_A != announce_B:
+        print("\nAlice and Bob detect Eve's interference and abort the protocol.\n")
+        return 1
+
+    numBits = len(key_A)
+    print("Alice's remaining %d-bit key:\n%s") % (numBits, bitFormat(key_A))
+    print("Bob's remaining %d-bit key:\n%s") % (numBits, bitFormat(key_B))
+
+    # TODO: Error reconciliation
+
+    # TODO: Privacy amplification
+    return 0

@@ -150,7 +150,7 @@ def getRandomBits(n):
     return bitstring
 
 
-def matchKeys(key1, key2, bases1, bases2):
+def matchKeysBB84(key1, key2, bases1, bases2):
     """If bases1[k] != bases2[k], discard bit k from both keys.
     Returns a tuple containing the resulting keys.
     """
@@ -159,3 +159,17 @@ def matchKeys(key1, key2, bases1, bases2):
     newKey2 = [key2[k] for k in range(len(key1)) if match[k]]
 
     return (newKey1, newKey2)
+
+
+def matchKeysB92(key_A, key_B):
+    """Return the tuple (key_A, key_B) after removing bits where Bob's measured photon
+    was absorbed. Assumes a value of -1 in key_B represents an absorbed photon.
+    """
+    match = [False if elem == -1 else True for elem in key_B]
+    key_B = [key_B[elem] for elem in range(len(key_B)) if match[elem]]
+
+    while len(match) < len(key_A):
+        match.append(True)
+    key_A = [key_A[elem] for elem in range(len(key_A)) if match[elem]]
+
+    return (key_A, key_B)
