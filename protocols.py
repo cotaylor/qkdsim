@@ -59,9 +59,7 @@ def bb84(n, eve=False, errorRate=0.0, verbose=True):
                           "\nbefore re-sending the qubits to Bob.\n")
 
     # Introduce error due to noise
-    for k in range(numBits):
-        p = np.random.random_sample()
-        if p < errorRate: sent_A[k] = flipState(sent_A[k])
+    sent_A = addNoiseBB84(sent_A, errorRate)
 
     # Bob measures qubit each in a randomly chosen basis
     bases_B = getRandomBits(numBits)
@@ -95,7 +93,8 @@ def bb84(n, eve=False, errorRate=0.0, verbose=True):
     print("Bob's announced bits:\n%s") % bitFormat(announce_B)
 
     # TODO: error reconciliation
-    if announce_A != announce_B:
+
+    if detectEavesdrop(key_A, key_B, errorRate):
         print("\nAlice and Bob detect Eve's interference and abort the protocol.")
         return 1
 
@@ -161,7 +160,7 @@ def b92(n, eve=False, errorRate=0.0, verbose=True):
                           "\nbefore re-sending the qubits to Bob.\n")
 
     # Introduce error due to noise
-    addNoise(sent_A, errorRate)
+    sent_A = addNoiseB92(sent_A, errorRate)
 
     # Bob measures each qubit in a randomly chosen basis
     bases_B = getRandomBits(numBits)
@@ -199,7 +198,7 @@ def b92(n, eve=False, errorRate=0.0, verbose=True):
     print("Bob's announced bits:\n%s") % bitFormat(announce_B)
 
     # TODO: tolerance to noise
-    if announce_A != announce_B:
+    if detectEavesdrop(key_A, key_B, errorRate):
         print("\nAlice and Bob detect Eve's interference and abort the protocol.\n")
         return 1
 

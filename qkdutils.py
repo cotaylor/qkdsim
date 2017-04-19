@@ -2,11 +2,20 @@ import numpy as np
 import qit
 
 
-def addNoise(bits, errorRate):
+def addNoiseB92(bits, errorRate):
+    """Simulate channel noise for the B92 protocol."""
+    for k in range(len(bits)):
+        p = np.random.random_sample()
+        if p < errorRate: bits[k] = flipStateB92(bits[k])
+
+    return bits
+
+
+def addNoiseBB84(bits, errorRate):
     """Simulate channel noise, each bit can be flipped with probability given by errorRate."""
     for k in range(len(bits)):
         p = np.random.random_sample()
-        if p < errorRate: bits[k] = flipState(bits[k])
+        if p < errorRate: bits[k] = flipStateBB84(bits[k])
 
     return bits
 
@@ -45,6 +54,19 @@ def decodeStateBB84(state, basis):
     _, result = state.measure()
 
     return bool(result)
+
+
+def detectEavesdrop(key1, key2, errorRate):
+    """Return True if Alice and Bob detect Eve's interference, False otherwise."""
+    if len(key1) == 0 or len(key2) == 0: return True
+
+    tolerance = errorRate * 1.2
+    if len(key1) != len(key2): return True
+    mismatch = sum([1 for k in range(len(key1)) if key1[k] != key2[k]])
+    print("actual error: %f, expected error: %f") % (abs(float(mismatch)/len(key1) - errorRate), tolerance)
+    if abs(float(mismatch)/len(key1) - errorRate) > tolerance: return True
+
+    return False
 
 
 def decodeStateE91(state):
@@ -134,7 +156,12 @@ def equivState(q1, q2):
     return np.array_equal(q1.prob(), q2.prob())
 
 
-def flipState(q):
+def flipStateB92(q):
+    """Perform the transformation corresponding to a bit flip in the B92 protocol."""
+    return q.u_propagate(qit.H)
+
+
+def flipStateBB84(q):
     """Perform the transformation corresponding to a bit flip on the given quantum state
     and return it. TODO: is there a better way to simulate noise?
     """
@@ -142,6 +169,7 @@ def flipState(q):
         return q.u_propagate(qit.sx)
     else:
         return q.u_propagate(qit.sz)
+
 
 def getRandomBits(n):
     """Return a list of n bits, each either 0 or 1 with equal probability."""
