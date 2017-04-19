@@ -1,20 +1,55 @@
 import numpy as np
 import qit
 
+
+def addNoise(bits, errorRate):
+    """Simulate channel noise, each bit can be flipped with probability given by errorRate."""
+    for k in range(len(bits)):
+        p = np.random.random_sample()
+        if p < errorRate: bits[k] = flipState(bits[k])
+
+    return bits
+
 def bitFormat(bits):
-    """Return a printable representation of the given list of bools."""
-    return '[' + ', '.join(['1' if elem else '0' for elem in bits]) + ']'
+    """Return a printable representation of the given list of bools representing bits."""
+    return '[' + ', '.join(['1' if b == True else '0' if b == False else '-' for b in bits]) + ']'
 
 
-def decodeState(state, basis):
+def decodeStateB92(state, basis):
+    """Return a bool corresponding to the result of measuring the given state using one of two
+    filters.
+    If basis=0, the filter will pass antidiagonal photons and absorb diagonal photons.
+    If basis=1, the filter will pass horizontal photons and absorb vertical photons.
+    This corresponds to measuring the correct result 1/4 of the time, otherwise measuring nothing.
+    """
+    # Save the original bit Alice sent
+    aliceBit = True
+    if equivState(state, qit.state('0')): aliceBit = False
+
+    # Apply chosen filter
+    if basis == 0: state = state.u_propagate(qit.H)
+
+    _, result = state.measure()
+    if result:
+        return aliceBit
+    else:
+        return None
+
+
+def decodeStateBB84(state, basis):
     """Return a bool corresponding to the result of measuring the given state in the given basis."""
     # Change basis if necessary
     if basis: state = state.u_propagate(qit.H)
 
     # Measure in the chosen basis
     _, result = state.measure()
-    
+
     return bool(result)
+
+
+def decodeStateE91(state):
+    # TODO: implement
+    return None
 
 
 def discloseHalf(key1, key2):
@@ -30,27 +65,50 @@ def discloseHalf(key1, key2):
 
     return (announce1, keep1, announce2, keep2)
 
-    
-def eavesdrop(state, basis):
+
+def eavesdropB92(state, basis):
+    result = decodeStateB92(state, basis)
+    if result != None: return encodeBitB92(result)
+
+    return None
+
+
+def eavesdropBB84(state, basis):
     """Measure an intercepted quantum state in the given basis, and attempt to hide the
     operation by re-encoding the measurement result in the same basis. Return the new state.
     """
-    result = decodeState(state, basis)
-    newState = encodeBit(result, basis)
-
-    return newState
+    result = decodeStateBB84(state, basis)
+    return encodeBitBB84(result, basis)
 
 
-def encodeBit(value, basis):
-    """Return the quantum state representing the encoding of the given binary value in the given basis"""
+def encodeBitB92(value):
+    """Return the quantum state representing the B92 encoding of the given binary value."""
+    q = qit.state('0')
+    if value:
+        return q.u_propagate(qit.H)
+    else:
+        return q
+
+
+def encodeBitBB84(value, basis):
+    """Return the quantum state representing the encoding of the given binary value in the given basis."""
     q = qit.state('0')
     if value: q = q.u_propagate(qit.sx)    # Apply Pauli X operator to flip bit
     if basis: q = q.u_propagate(qit.H)    # Apply Hadamard operator to change basis
 
     return q
-        
 
-def encodeRawKey(key, bases):
+
+def encodeKeyB92(key):
+    """Return a list of quantum states corresponding to the B92 encoding of the given binary string."""
+    qs = []
+    for k in range(len(key)):
+        qs.append(encodeBitB92(key[k]))
+
+    return qs
+
+
+def encodeKeyBB84(key, bases):
     """Return a list of quantum states corresponding to individual qubits prepared using the
     following encoding:
          key | bases | state
@@ -67,7 +125,7 @@ def encodeRawKey(key, bases):
     # Encode each bit in the chosen basis
     qs = []
     for k in range(len(key)):
-        qs.append(encodeBit(key[k], bases[k]))
+        qs.append(encodeBitBB84(key[k], bases[k]))
     return qs
 
 

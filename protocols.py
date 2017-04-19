@@ -1,6 +1,4 @@
-import numpy as np
-import qit
-from utils import *
+from qkdutils import *
 
 def bb84(n, verbose=True, eve=True, errorRate=0.0):
     """Simulation of Bennett & Brassard's 1984 protocol for quantum key distribution with
@@ -8,12 +6,14 @@ def bb84(n, verbose=True, eve=True, errorRate=0.0):
     If eavesdrop is set to True, assumes the presence of an eavesdropper attempting an
     intercept-resend attack.
     """
-    numBits = 4*n
-    
+    numBits = 5 * n
+
     if verbose:
         print("\n=====BB84 protocol=====\n%d initial bits, ~%d key bits") % (numBits, n)
-        if eavesdrop: print("with eavesdropping")
-        else: print("without eavesdropping\n")
+        if eve: print("with eavesdropping")
+        else: print("without eavesdropping")
+        if errorRate: print("with channel noise\n")
+        else: print("without channel noise\n")
 
     # Alice generates a random bit string to be encoded
     rawKey = getRandomBits(numBits)
@@ -26,7 +26,7 @@ def bb84(n, verbose=True, eve=True, errorRate=0.0):
     print("For each bit, Alice randomly chooses one of two non-orthogonal sets of bases:\n%s") % bitFormat(bases_A)
 
     if verbose:
-        print("\nAlice encodes each qubit according to the following strategy:"\
+        print("\nAlice encodes each bit according to the following strategy:"\
               "\n    value | basis | state"\
               "\n      0   |   0   | +1 |0>"\
               "\n      0   |   1   | +0.7071 (|0> + |1>)"\
@@ -36,7 +36,7 @@ def bb84(n, verbose=True, eve=True, errorRate=0.0):
 
     # Alice prepares n qubits, with the kth qubit in state |0> or |1> in either the computational
     # basis or the Hadamard basis, depending on the value of the kth bit in each bitstring
-    sent_A = encodeRawKey(rawKey, bases_A)
+    sent_A = encodeKeyBB84(rawKey, bases_A)
 
     # QKD guarantees with high probability we will detect any eavesdropping
     if eve:
@@ -53,7 +53,7 @@ def bb84(n, verbose=True, eve=True, errorRate=0.0):
 
         # Eve measures each qubit and attempts to cover her tracks
         for k in range(numBits):
-            sent_A[k] = eavesdrop(sent_A[k], bases_E[k])
+            sent_A[k] = eavesdropBB84(sent_A[k], bases_E[k])
 
         if verbose: print("\nEve attempts to hide her actions by re-encoding her measurement result"\
                           "\nbefore re-sending the qubits to Bob.\n")
@@ -67,7 +67,7 @@ def bb84(n, verbose=True, eve=True, errorRate=0.0):
     bases_B = getRandomBits(numBits)
     key_B = []
     for k in range(numBits):
-        key_B.append(decodeState(sent_A[k], bases_B[k]))
+        key_B.append(decodeStateBB84(sent_A[k], bases_B[k]))
 
     print("Bob chooses a random basis to measure each qubit in:\n%s") % bitFormat(bases_B)
     print("Bob's measurement results:\n%s") % bitFormat(key_B)
@@ -94,7 +94,7 @@ def bb84(n, verbose=True, eve=True, errorRate=0.0):
     print("Alice's announced bits:\n%s") % bitFormat(announce_A)
     print("Bob's announced bits:\n%s") % bitFormat(announce_B)
 
-    # TODO: add possibility of channel noise
+    # TODO: error reconciliation
     if announce_A != announce_B:
         print("\nAlice and Bob detect Eve's interference and abort the protocol.")
         return 1
@@ -105,7 +105,74 @@ def bb84(n, verbose=True, eve=True, errorRate=0.0):
 
     # TODO: Error reconciliation
 
-    # Privacy amplification
-    
-
+    # TODO: Privacy amplification
     return 0
+
+def b92(n, verbose=True, eve=True, errorRate=0.0):
+    """Simulation of Bennet's 1992 protocol for quantum key distribution with n initial
+    bits in the raw key. If eavesdrop is set to True, assumes the presence of an eavesdropper
+    attempting an intercept-resend attack. errorRate represents the probability that a bit
+    will be flipped when Bob measures it.
+    """
+
+    numBits = 5 * n
+
+    if verbose:
+        print("\n=====B92 protocol=====\n%d initial bits, ~%d key bits") % (numBits, n)
+        if eve: print("with eavesdropping")
+        else: print("without eavesdropping")
+        if errorRate: print("with channel noise\n")
+        else: print("without channel noise\n")
+
+    # Alice generates a random bit string to be encoded
+    rawKey = getRandomBits(numBits)
+    print("\nAlice generates %d random bits to be encoded:\n%s") % (numBits, bitFormat(rawKey))
+
+    # Alice encodes each bit as a qubit as |0> in either the computational or Hadamard basis
+    sent_A = encodeKeyB92(rawKey)
+    print("Alice encodes each bit according to the following strategy:"\
+          "\n    value | state"\
+          "\n      0   | +1 |0>"\
+          "\n      1   | +0.7071 (|0> + |1>)"\
+          "\nShe then sends each qubit one by one to Bob over a quantum channel.\n")
+
+    # QKD guarantees with high probability we will detect any eavesdropping
+    if eve:
+        if verbose:
+            print("Eve intercepts each qubit as it travels to Bob. Because it is not possible"\
+                  "\nto clone quantum states, she must measure each qubit before re-sending to Bob.\n")
+
+        # TODO: try different eavesdropping strategies
+        # Eve randomly selects a filter to use for each qubit
+        bases_E = getRandomBits(numBits)
+        print("Eve chooses a random filter to measure each qubit with:\n%s") % bitFormat(bases_E)
+
+        # Eve measures each qubit and attempts to cover her tracks
+        temp = []
+        for k in range(numBits):
+            result = eavesdropB92(sent_A[k], bases_E[k])
+            if result != None: temp.append(result)
+
+        sent_A = temp
+        numBits = len(sent_A)
+
+        if verbose: print("\nEve attempts to hide her actions by re-encoding her measurement result"\
+                          "\nbefore re-sending the qubits to Bob.\n")
+
+    # Introduce error due to noise
+    addNoise(sent_A, errorRate)
+
+    # Bob measures each qubit in a randomly chosen basis
+    bases_B = getRandomBits(numBits)
+    key_B = []
+    for k in range(numBits):
+        result = decodeStateB92(sent_A[k], bases_B[k])
+        if result == None: key_B.append(-1)
+        else: key_B.append(result)
+
+    print("Bob chooses a random filter to measure each qubit with:\n%s") % bitFormat(bases_B)
+    print("Bob's measurement results:\n%s") % bitFormat(key_B)
+
+    key_B = [elem for elem in key_B if elem != -1]
+    numBits = len(key_B)
+    print("Bob's sifted key:\n%s") % bitFormat(key_B)
