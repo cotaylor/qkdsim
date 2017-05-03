@@ -210,3 +210,31 @@ def b92(n, eve=False, errorRate=0.0, verbose=True):
 
     # TODO: Privacy amplification
     return 0
+
+def e91(n, eve=False, errorRate=0.0, verbose=True):
+    """Simulation of Ekert's 1991 entanglement-based protocol for quantum key distribution."""
+    numBits = 5 * n    # TODO: change value?
+    
+    if verbose:
+        print("\n=====E91 protocol=====\n%d initial bits, ~%d key bits") % (numBits, n)
+        if eve: print ("with eavesdropping")
+        else: print("without eavesdropping")
+        if errorRate: print("with channel noise\n")
+        else: print("without channel noise\n")
+
+    # A trusted mediator generates pairs of particles in the singlet state
+    #     +0.7071 |0> -0.7071 |1>
+    # and sends one particle from each pair to Alice and the other to Bob.
+    # TODO: print this
+
+    basesA, basesB = chooseAxesE91(numBits)
+    rawKey = getRandomBits(numBits)    # Alice's mstment results for each particle
+    keyA, keyB, discardA, discardB = []
+    
+    for j in range(numBits):
+        if basesA[j] == basesB[j]:    # Alice and Bob's bits perfectly anticorrelated
+            keyA.append(rawKey[j])
+            keyB.append(rawKey[j])    # Bob flips his bit and adds to his key
+        else:
+            discardA.append(rawKey[j])
+            discardB.append(measureBobE91(

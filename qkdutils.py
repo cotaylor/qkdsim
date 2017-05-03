@@ -1,3 +1,5 @@
+from math import pi
+from random import choice
 import numpy as np
 import qit
 
@@ -22,6 +24,22 @@ def addNoiseBB84(bits, errorRate):
 def bitFormat(bits):
     """Return a printable representation of the given list of bools representing bits."""
     return '[' + ', '.join(['1' if b == True else '0' if b == False else '-' for b in bits]) + ']'
+
+
+def chooseAxesE91(n):
+    """Return Alice and Bob's randomly chosen mstment axes for n qubits in the E91 protocol:
+           A chooses from (0, pi/4, pi/2) with equal probability,
+           B chooses from (pi/4, pi/2, 3pi/4) with equal probability.
+    """
+    choicesA = [0, pi/4, pi/2]
+    choicesB = [pi/4, pi/2, 3*pi/4]
+    basesA = []
+    basesB =[]
+    for j in range(n):
+        basesA.append(choice(choicesA))
+        basesB.append(choice(choicesB))
+
+    return (basesA, basesB)
 
 
 def decodeStateB92(state, basis):
