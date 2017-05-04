@@ -63,7 +63,7 @@ def detectEavesdrop(key1, key2, errorRate):
     tolerance = errorRate * 1.2
     if len(key1) != len(key2): return True
     mismatch = sum([1 for k in range(len(key1)) if key1[k] != key2[k]])
-    print("actual error: %f, expected error: %f") % (abs(float(mismatch)/len(key1) - errorRate), tolerance)
+#    print("actual error: %f, expected error: %f") % (abs(float(mismatch)/len(key1) - errorRate), tolerance)
     if abs(float(mismatch)/len(key1) - errorRate) > tolerance: return True
 
     return False
