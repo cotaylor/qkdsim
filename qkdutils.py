@@ -1,5 +1,5 @@
-from math import pi
-from random import choice
+from math import pi, cos, sqrt
+from Crypto.Random import random
 import numpy as np
 import qit
 
@@ -23,7 +23,15 @@ def addNoiseBB84(bits, errorRate):
 
 def bitFormat(bits):
     """Return a printable representation of the given list of bools representing bits."""
-    return '[' + ', '.join(['1' if b == True else '0' if b == False else '-' for b in bits]) + ']'
+    if len(bits) < 64:
+        return '[' + ', '.join(['1' if b == True else '0' if b == False else '-' for b in bits]) + ']'
+    else:
+        temp = ""
+        for j in range(len(bits)):
+            if bits[j]: temp += "1"
+            else: temp += "0"
+
+        return hex(int(temp, 2))
 
 
 def chooseAxesE91(n):
@@ -31,13 +39,15 @@ def chooseAxesE91(n):
            A chooses from (0, pi/4, pi/2) with equal probability,
            B chooses from (pi/4, pi/2, 3pi/4) with equal probability.
     """
-    choicesA = [0, pi/4, pi/2]
-    choicesB = [pi/4, pi/2, 3*pi/4]
+    choicesA = [0, pi/8, pi/4]
+    choicesB = [0, pi/8, -pi/8]
     basesA = []
     basesB =[]
     for j in range(n):
-        basesA.append(choice(choicesA))
-        basesB.append(choice(choicesB))
+        basesA.append(random.choice(choicesA))
+        basesB.append(random.choice(choicesB))
+#        print("(%f, %f)") % (basesA[j], basesB[j])
+
 
     return (basesA, basesB)
 
@@ -85,11 +95,6 @@ def detectEavesdrop(key1, key2, errorRate):
     if abs(float(mismatch)/len(key1) - errorRate) > tolerance: return True
 
     return False
-
-
-def decodeStateE91(state):
-    # TODO: implement
-    return None
 
 
 def discloseHalf(key1, key2):
@@ -189,10 +194,31 @@ def flipStateBB84(q):
         return q.u_propagate(qit.sz)
 
 
+def formatBasesE91(bases):
+    """Return printable representation of E91 basis choices for Alice and Bob.
+           value | angle
+             1   |   0
+             2   |  pi/8
+             3   |  pi/4
+             4   | -pi/8
+    """
+    string = []
+
+    for j in range(len(bases)):
+        if bases[j] == 0: string.append(1)
+        elif bases[j] == pi/8: string.append(2)
+        elif bases[j] == pi/4: string.append(3)
+        elif bases[j] == -pi/8: string.append(4)
+
+    return string
+
+
+
 def getRandomBits(n):
     """Return a list of n bits, each either 0 or 1 with equal probability."""
-    dist = np.random.rand(n)
-    bitstring = [elem > 0.5 for elem in dist]
+    bitstring = []
+    for j in range(n):
+        bitstring.append(random.choice([True, False]))
     return bitstring
 
 
@@ -211,11 +237,54 @@ def matchKeysB92(key_A, key_B):
     """Return the tuple (key_A, key_B) after removing bits where Bob's measured photon
     was absorbed. Assumes a value of -1 in key_B represents an absorbed photon.
     """
-    match = [False if elem == -1 else True for elem in key_B]
-    key_B = [key_B[elem] for elem in range(len(key_B)) if match[elem]]
+    match = [False if k == -1 else True for k in key_B]
+    key_B = [key_B[k] for k in range(len(key_B)) if match[k]]
 
     while len(match) < len(key_A):
         match.append(True)
-    key_A = [key_A[elem] for elem in range(len(key_A)) if match[elem]]
+    key_A = [key_A[k] for k in range(len(key_A)) if match[k]]
 
     return (key_A, key_B)
+
+
+def matchKeysE91(key1, key2, bases1, bases2):
+    """Return the tuple (key1, key2, discard1, discard2) after removing bits where Alice
+    and Bob selected incompatible axes of measurement in the E91 protocol.
+    """
+    match = [True if bases1[k] == bases2[k] else False for k in range(len(bases1))]
+    discard1 = [key1[k] for k in range(len(key1)) if not(match[k])]
+    key1 = [key1[k] for k in range(len(key1)) if match[k]]
+    discard2 = [key2[k] for k in range(len(key2)) if not(match[k])]
+    key2 = [not(key2[k]) for k in range(len(key2)) if match[k]]
+
+    return (key1, key2, discard1, discard2)
+
+
+def measureEntangledState(basisA, basisB, errorRate=0.0):
+    """Return Alice and Bob's measurement results on a pair of maximally
+    entangled qubits. basis[A,B] contain Alice and Bob's axes of mstment.
+    """
+    # Alice measures either basis state with equal probability
+    # -1 will correspond to False (0) and +1 will correspond to True (1)
+    resultA = random.choice([-1, 1])
+
+    # If Alice and Bob chose the same axis of mstment, Bob's result is
+    # perfectly anti-correlated with Alice's. Otherwise its correlation
+    # coefficient is given by -cos[2(basisA-basisB)]. We use the result
+    # r to generate a correlated random number that gives Bob's result.
+    r = -1 * cos(2 * (basisA - basisB))
+    r2 = r ** 2
+    ve = 1 - r2
+    SD = sqrt(ve)
+    e = np.random.normal(0, SD)
+    resultB = resultA * r + e
+
+    resultA = False if resultA < 0 else True
+    resultB = False if resultB < 0 else True
+
+    if errorRate:
+        samples = np.random.rand(2)
+        if samples[0] < errorRate: resultA = not(resultA)
+        if samples[1] < errorRate: resultB = not(resultB)
+
+    return (resultA, resultB)

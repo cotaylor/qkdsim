@@ -61,7 +61,7 @@ def bb84(n, eve=False, errorRate=0.0, verbose=True):
     # Introduce error due to noise
     sent_A = addNoiseBB84(sent_A, errorRate)
 
-    # Bob measures qubit each in a randomly chosen basis
+    # Bob measures each qubit in a randomly chosen basis
     bases_B = getRandomBits(numBits)
     key_B = []
     for k in range(numBits):
@@ -83,7 +83,6 @@ def bb84(n, eve=False, errorRate=0.0, verbose=True):
     print("Bob's key after discarding mismatches:\n%s") % bitFormat(key_B)
 
     # Alice and Bob sacrifice a subset of their bits to try to detect Eve
-    # TODO: can examine effect of announcing more or fewer bits
     announce_A, key_A, announce_B, key_B = discloseHalf(key_A, key_B)
     if verbose:
         print("\nAlice and Bob sacrifice %d of their %d shared bits and publicly announce"\
@@ -91,8 +90,6 @@ def bb84(n, eve=False, errorRate=0.0, verbose=True):
 
     print("Alice's announced bits:\n%s") % bitFormat(announce_A)
     print("Bob's announced bits:\n%s") % bitFormat(announce_B)
-
-    # TODO: error reconciliation
 
     if detectEavesdrop(key_A, key_B, errorRate):
         print("\nAlice and Bob detect Eve's interference and abort the protocol.")
@@ -102,9 +99,6 @@ def bb84(n, eve=False, errorRate=0.0, verbose=True):
     print("Alice's remaining %d-bit key:\n%s") % (numBits, bitFormat(key_A))
     print("Bob's remaining %d-bit key:\n%s") % (numBits, bitFormat(key_B))
 
-    # TODO: Error reconciliation
-
-    # TODO: Privacy amplification
     return 0
 
 def b92(n, eve=False, errorRate=0.0, verbose=True):
@@ -197,7 +191,6 @@ def b92(n, eve=False, errorRate=0.0, verbose=True):
     print("Alice's announced bits:\n%s") % bitFormat(announce_A)
     print("Bob's announced bits:\n%s") % bitFormat(announce_B)
 
-    # TODO: tolerance to noise
     if detectEavesdrop(key_A, key_B, errorRate):
         print("\nAlice and Bob detect Eve's interference and abort the protocol.\n")
         return 1
@@ -206,35 +199,43 @@ def b92(n, eve=False, errorRate=0.0, verbose=True):
     print("Alice's remaining %d-bit key:\n%s") % (numBits, bitFormat(key_A))
     print("Bob's remaining %d-bit key:\n%s") % (numBits, bitFormat(key_B))
 
-    # TODO: Error reconciliation
-
-    # TODO: Privacy amplification
     return 0
 
-def e91(n, eve=False, errorRate=0.0, verbose=True):
+def e91(n, errorRate=0.0, verbose=True):
     """Simulation of Ekert's 1991 entanglement-based protocol for quantum key distribution."""
-    numBits = 5 * n    # TODO: change value?
-    
+    numBits = 5 * n
+
     if verbose:
         print("\n=====E91 protocol=====\n%d initial bits, ~%d key bits") % (numBits, n)
-        if eve: print ("with eavesdropping")
-        else: print("without eavesdropping")
+        print("without eavesdropping")
         if errorRate: print("with channel noise\n")
         else: print("without channel noise\n")
 
     # A trusted mediator generates pairs of particles in the singlet state
     #     +0.7071 |0> -0.7071 |1>
     # and sends one particle from each pair to Alice and the other to Bob.
-    # TODO: print this
-
+    # Alice randomly offsets her axis of measurement by one of the following:
+    #     [0, pi/8, pi/4]
+    # Bob randomly offsets his axis of measurement by one of the following:
+    #     [0, pi/8, -pi/8]
     basesA, basesB = chooseAxesE91(numBits)
-    rawKey = getRandomBits(numBits)    # Alice's mstment results for each particle
-    keyA, keyB, discardA, discardB = []
-    
+    keyA, keyB = [], []
+
     for j in range(numBits):
-        if basesA[j] == basesB[j]:    # Alice and Bob's bits perfectly anticorrelated
-            keyA.append(rawKey[j])
-            keyB.append(rawKey[j])    # Bob flips his bit and adds to his key
-        else:
-            discardA.append(rawKey[j])
-            discardB.append(measureBobE91(
+        (newA, newB) = measureEntangledState(basesA[j], basesB[j], errorRate)
+        keyA.append(newA)
+        keyB.append(newB)
+
+    print("Alice's randomly chosen axes of measurement:\n%s") % formatBasesE91(basesA)
+    print("Bob's randomly chosen axes of measurement:\n%s") % formatBasesE91(basesB)
+    print("Alice's measurement results:\n%s") % bitFormat(keyA)
+    print("Bob's measurement results:\n%s") % bitFormat(keyB)
+
+    keyA, keyB, discardA, discardB = matchKeysE91(keyA, keyB, basesA, basesB)
+    print("Alice's %d discarded bits:\n%s") % (len(discardA), bitFormat(discardA))
+    print("Bob's %d discarded bits:\n%s") % (len(discardB), bitFormat(discardB))
+
+    print("Alice's %d-bit sifted key:\n%s") % (len(keyA), bitFormat(keyA))
+    print("Bob's %d-bit sifted key:\n%s") % (len(keyB), bitFormat(keyB))
+
+    return 0
