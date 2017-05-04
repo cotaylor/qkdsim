@@ -2,13 +2,31 @@ from qkdutils import *
 from math import pi
 import qit
 import numpy as np
+import protocols
+
+def test_bb84():
+    numTrials = 20
+    numBits = 2048
+
+    for j in range(numTrials):
+        assert(len(protocols.bb84(numBits, False, 0.0, False)) >= 3*numBits/4)
+        assert(protocols.bb84(numBits, True, 0.0, False) == -1)
+
+
+def test_b92():
+    numTrials = 20
+    numBits = 2048
+
+    for j in range(numTrials):
+        assert(len(protocols.b92(numBits, False, 0.0, False)) >= 3*numBits/4)
+        assert(protocols.b92(numBits, True, 0.0, False) == -1)
 
 
 def test_decodeStateB92():
     # Test probabilistic results match our expectations:
     # If sent == basis, measure the value of sent 50% of the time
     # If sent not measured, nothing comes through the filter
-    numTrials = 30
+    numTrials = 50
     numBits = 1024
     sent = getRandomBits(numBits)
     bases = getRandomBits(numBits)
@@ -45,7 +63,7 @@ def test_decodeStateBB84_deterministic():
 
 def test_decodeStateBB84_probabilistic():
     # Test probabilistic measurement is roughly even
-    numTrials = 1000
+    numTrials = 10000
     tolerance = 0.1 * numTrials
 
     q = qit.state('0')
@@ -74,7 +92,7 @@ def test_decodeStateBB84_probabilistic():
 
 
 def test_discloseHalf():
-    numTrials = 1024
+    numTrials = 128
 
     for j in range(numTrials):
         key1 = getRandomBits(j)
@@ -82,6 +100,14 @@ def test_discloseHalf():
         announce1, key1, announce2, key2 = discloseHalf(key1, key2)
         assert(len(key1) + len(announce1) == j)
         assert(len(key2) + len(announce2) == j)
+
+
+def test_e91():
+    numTrials = 20
+    numBits = 2048
+
+    for j in range(numTrials):
+        assert(len(protocols.e91(numBits)) >= 3*numBits/4)
 
 
 def test_encodeBitBB84():
@@ -95,7 +121,7 @@ def test_encodeBitBB84():
 def test_getRandomBits():
     counts = [0, 0]
     numBits = 1024
-    numTrials = 50
+    numTrials = 100
     tolerance = 0.1 * numBits
 
     for j in range(numTrials):
@@ -107,7 +133,7 @@ def test_getRandomBits():
 
 
 def test_matchKeysBB84():
-    numTrials = 50
+    numTrials = 100
     numBits = 256
 
     for j in range(numTrials):
@@ -124,18 +150,10 @@ def test_matchKeysBB84():
 
 
 def test_measureEntangledState():
-    numTrials = 1000
-    mismatch = 0
-    opposite = 0
+    numTrials = 10000
 
     for j in range(numTrials):
         (basisA, basisB) = chooseAxesE91(1)
         (A, B) = measureEntangledState(basisA[0], basisB[0])
         if basisA == basisB:
             assert(A != B)    # Bob's result must be anti-correlated with Alice's
-        else:
-            mismatch += 1
-            if A != B: opposite += 1
-
-    print(float(opposite)/mismatch)
-    assert(False == True)

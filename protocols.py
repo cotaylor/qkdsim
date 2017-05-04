@@ -93,13 +93,13 @@ def bb84(n, eve=False, errorRate=0.0, verbose=True):
 
     if detectEavesdrop(key_A, key_B, errorRate):
         print("\nAlice and Bob detect Eve's interference and abort the protocol.")
-        return 1
+        return -1
 
     numBits = len(key_A)
     print("Alice's remaining %d-bit key:\n%s") % (numBits, bitFormat(key_A))
     print("Bob's remaining %d-bit key:\n%s") % (numBits, bitFormat(key_B))
 
-    return 0
+    return key_A
 
 def b92(n, eve=False, errorRate=0.0, verbose=True):
     """Simulation of Bennet's 1992 protocol for quantum key distribution with n initial
@@ -182,7 +182,7 @@ def b92(n, eve=False, errorRate=0.0, verbose=True):
         print("\nAlice and Bob announce the lengths of their keys. Since Alice's"\
               "\nkey is %d bits and Bob's is %d bits, they are able to detect"\
               "\nEve's interference and abort the protocol.\n") % (len(key_A), len(key_B))
-        return 1
+        return -1
 
     announce_A, key_A, announce_B, key_B = discloseHalf(key_A, key_B)
     if verbose:
@@ -193,13 +193,13 @@ def b92(n, eve=False, errorRate=0.0, verbose=True):
 
     if detectEavesdrop(key_A, key_B, errorRate):
         print("\nAlice and Bob detect Eve's interference and abort the protocol.\n")
-        return 1
+        return -1
 
     numBits = len(key_A)
     print("Alice's remaining %d-bit key:\n%s") % (numBits, bitFormat(key_A))
     print("Bob's remaining %d-bit key:\n%s") % (numBits, bitFormat(key_B))
 
-    return 0
+    return key_A
 
 def e91(n, errorRate=0.0, verbose=True):
     """Simulation of Ekert's 1991 entanglement-based protocol for quantum key distribution."""
@@ -218,24 +218,24 @@ def e91(n, errorRate=0.0, verbose=True):
     #     [0, pi/8, pi/4]
     # Bob randomly offsets his axis of measurement by one of the following:
     #     [0, pi/8, -pi/8]
-    basesA, basesB = chooseAxesE91(numBits)
-    keyA, keyB = [], []
+    bases_A, bases_B = chooseAxesE91(numBits)
+    key_A, key_B = [], []
 
     for j in range(numBits):
-        (newA, newB) = measureEntangledState(basesA[j], basesB[j], errorRate)
-        keyA.append(newA)
-        keyB.append(newB)
+        (new_A, new_B) = measureEntangledState(bases_A[j], bases_B[j], errorRate)
+        key_A.append(new_A)
+        key_B.append(new_B)
 
-    print("Alice's randomly chosen axes of measurement:\n%s") % formatBasesE91(basesA)
-    print("Bob's randomly chosen axes of measurement:\n%s") % formatBasesE91(basesB)
-    print("Alice's measurement results:\n%s") % bitFormat(keyA)
-    print("Bob's measurement results:\n%s") % bitFormat(keyB)
+    print("Alice's randomly chosen axes of measurement:\n%s") % formatBasesE91(bases_A)
+    print("Bob's randomly chosen axes of measurement:\n%s") % formatBasesE91(bases_B)
+    print("Alice's measurement results:\n%s") % bitFormat(key_A)
+    print("Bob's measurement results:\n%s") % bitFormat(key_B)
 
-    keyA, keyB, discardA, discardB = matchKeysE91(keyA, keyB, basesA, basesB)
-    print("Alice's %d discarded bits:\n%s") % (len(discardA), bitFormat(discardA))
-    print("Bob's %d discarded bits:\n%s") % (len(discardB), bitFormat(discardB))
+    key_A, key_B, discard_A, discard_B = matchKeysE91(key_A, key_B, bases_A, bases_B)
+    print("Alice's %d discarded bits:\n%s") % (len(discard_A), bitFormat(discard_A))
+    print("Bob's %d discarded bits:\n%s") % (len(discard_B), bitFormat(discard_B))
 
-    print("Alice's %d-bit sifted key:\n%s") % (len(keyA), bitFormat(keyA))
-    print("Bob's %d-bit sifted key:\n%s") % (len(keyB), bitFormat(keyB))
+    print("Alice's %d-bit sifted key:\n%s") % (len(key_A), bitFormat(key_A))
+    print("Bob's %d-bit sifted key:\n%s") % (len(key_B), bitFormat(key_B))
 
-    return 0
+    return key_A

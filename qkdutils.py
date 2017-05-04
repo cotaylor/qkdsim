@@ -21,6 +21,7 @@ def addNoiseBB84(bits, errorRate):
 
     return bits
 
+
 def bitFormat(bits):
     """Return a printable representation of the given list of bools representing bits."""
     if len(bits) < 64:
@@ -46,8 +47,6 @@ def chooseAxesE91(n):
     for j in range(n):
         basesA.append(random.choice(choicesA))
         basesB.append(random.choice(choicesB))
-#        print("(%f, %f)") % (basesA[j], basesB[j])
-
 
     return (basesA, basesB)
 
