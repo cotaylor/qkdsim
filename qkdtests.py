@@ -1,4 +1,5 @@
 from qkdutils import *
+from math import pi
 import qit
 import numpy as np
 
@@ -105,7 +106,7 @@ def test_getRandomBits():
         assert(abs(counts[0]-counts[1]) < tolerance)
 
 
-def test_matchKeys():
+def test_matchKeysBB84():
     numTrials = 50
     numBits = 256
 
@@ -118,5 +119,23 @@ def test_matchKeys():
         for k in range(numBits):
             key2.append(decodeStateBB84(sent[k], bases2[k]))
 
-        result1, result2 = matchKeys(key1, key2, bases1, bases2)
+        result1, result2 = matchKeysBB84(key1, key2, bases1, bases2)
         assert(result1 == result2)
+
+
+def test_measureEntangledState():
+    numTrials = 1000
+    mismatch = 0
+    opposite = 0
+
+    for j in range(numTrials):
+        (basisA, basisB) = chooseAxesE91(1)
+        (A, B) = measureEntangledState(basisA[0], basisB[0])
+        if basisA == basisB:
+            assert(A != B)    # Bob's result must be anti-correlated with Alice's
+        else:
+            mismatch += 1
+            if A != B: opposite += 1
+
+    print(float(opposite)/mismatch)
+    assert(False == True)
