@@ -400,11 +400,20 @@ This report will focus on three major protocols for quantum key distribution, na
 \subsection{Classical Cryptography}
 Most electronic communications today are encrypted using a public-key cipher such as RSA\cite{Rivest}. Public-key algorithms are convenient for everyday use because, unlike private-key systems, they do not require a unique shared key for each pair of users who wish to communicate. Instead, each user possesses a private key, which is used for authentication and digital signing, and a public key, which provides confidentiality. As a result, for a system with $n$ users, any pair of whom wish to communicate, a public-key system only requires $n(n-1)$ total keys, $2n$ of which are unique. For comparison, a similar system using private-key cryptography would require $n(n-1)/2$ unique keys (see Appendix A1). For example, a system with 100 users would require 200 unique keys using RSA and 4950 unique keys using a private-key cipher.\\
 
-However, the limitations of public-key cryptography lie in its reliance on problems which are difficult but not computationally infeasible. The most commonly used public-key cipher, RSA, relies on the difficulty of factoring composite integers\cite{Rivest}. Another type of public-key system, the elliptic curve cipher, relies on the difficulty of computing discrete logarithms\cite{Rosing}. These systems are only considered secure because no polynomial-time algorithm has been found to solve either of these problems. It has been shown that a network of computers can solve RSA classically in exponential time\cite{Weisstein}, and the lower bound on time to solve these problems has not been proven. Additionally, n attacker with a sufficiently complex quantum computer can break RSA and elliptic curve ciphers in polynomial time\cite{Shor}. Although a quantum computer capable of performing Shor's algorithm on 2048-bit RSA keys is not yet practical, advances such as topological quantum computing may render public-key cryptography obsolete in the near future.\\
+However, the limitations of public-key cryptography lie in its reliance on problems which are difficult but not computationally infeasible. The most commonly used public-key cipher, RSA, relies on the difficulty of factoring composite integers\cite{Rivest}. Another type of public-key system, the elliptic curve cipher, relies on the difficulty of computing discrete logarithms\cite{Rosing}. These systems are only considered secure because no polynomial-time algorithm has been found to solve either of these problems. It has been shown that a network of computers can solve RSA classically in sub-exponential time\cite{Weisstein}, and the lower bound on time to solve these problems has not been proven. Additionally, n attacker with a sufficiently complex quantum computer can break RSA and elliptic curve ciphers in polynomial time\cite{Shor}. Although a quantum computer capable of performing Shor's algorithm on 2048-bit RSA keys is not yet practical, advances such as topological quantum computing may render public-key cryptography obsolete in the near future.\\
 
-Unlike public-key schemes such as RSA, private-key ciphers require the generation of a new key for every pair of communicators. While this requires a much larger amount of key material, the resulting ciphertext is more secure as it does not rely on the infeasibility of solving difficult problems. Instead, the One Time Pad cipher guarantees that the ciphertext is unbreakable through either brute force or cryptanalysis. The One Time Pad (hence OTP) is one of the simplest examples of a private-key cipher. It requires a truly random key at least as long as the message to be encrypted. To encrypt, the sender adds the key (modulo 2) bitwise with the message, and as long as the sender and recipient have the same key the recipient can perform the same operation to decrypt. This cipher is perfectly resilient to brute force attacks, since any number of valid plaintext messages can map to the same ciphertext. Unless the attacker learns the key, it is impossible to determine which plaintext is the original message. Other private-key ciphers such as Triple DES and AES use key expansion to reduce the amount of key material required while maintaining nearly perfect security.\\
+Unlike public-key schemes such as RSA, private-key ciphers require the generation of a new key for every pair of communicators. While this requires a much larger amount of key material, the resulting ciphertext is more secure as it does not rely on the infeasibility of solving difficult problems. Instead, the One Time Pad cipher guarantees that the ciphertext is unbreakable through either brute force or cryptanalysis. The One Time Pad is one of the simplest examples of a private-key cipher. It requires a truly random key at least as long as the message to be encrypted. To encrypt, the sender adds the key (modulo 2) bitwise with the message, and as long as the sender and recipient have the same key the recipient can perform the same operation to decrypt. This cipher is perfectly resilient to brute force attacks, since any number of valid plaintext messages can map to the same ciphertext. Unless the attacker learns the key, it is impossible to determine which plaintext is the original message. Other private-key ciphers such as Triple DES and AES use key expansion to reduce the amount of key material required while maintaining nearly perfect security.\\
 
+In practice, private-key systems are seldom used due to limitations of classical key distribution:
+\begin{itemize}
+\item Keys must be truly random, as defects in pseudo-random number generators can result in low key entropy\cite{Heninger}.
+\item Keys must be exchanged in secret, classically requiring a face-to-face meeting.
+\item Keys must be guarded until use and destroyed afterwards.
+\end{itemize}
+In order for Alice and Bob to regularly exchange encrypted messages, they would have to meet in secret and generate terabytes of key material each meeting. Alternatively, they could rely on a trusted third party to generate the key material and distribute it to both of them. However, this would mean that the key is not known only to Alice and Bob, intoducing a new potential attack vector and making the key unusable for digital signing. QKD protocols address these limitations of private-key cryptography by providing a method for Alice and Bob to generate truly random, shared key material over long distances, even in the presence of eavesdroppers.\\
 
+\subsection{Quantum Encoding}
+Part of the security of QKD arises from the fact that neither party intends to use any specific key at the outset. Instead, the key is generated truly randomly from quantum mechanical phenomena such as thermal noise\cite{Jun}. In most QKD protocols, we assume Alice begins by generating a long string of truly random classical bits. Her goal is to encode this classical information in the states of quantum bits which are subject to the physical laws discussed in Section I.
 
 
 \subsection{Motivation}
@@ -555,16 +564,28 @@ Because the quantum state represented by a qubit cannot be observed or copied wi
 % set second argument of \begin to the number of references
 % (used to reserve space for the reference number labels box)
 
-\begin{thebibliography}{4}
-\bibitem[1]{Nielsen}
+\begin{thebibliography}{10}
+\bibitem[1]{BB84}
+  C. H. Bennett and G. Brassard, ``Quantum Cryptography: Public Key Distribution and Coin Tossing,'' Intl. Conf. on Computers, Systems, \& Signal Processing, 12 Dec. 1984.
+\bibitem[2]{B92}
+  C. H. Bennett, ``Quantum Cryptography Using Any Two Nonorthogonal States,'' Phys. Rev. Lett., Volume 68, Number 21, 25 May 1992.
+\bibitem[3]{E91}
+  A. K. Ekert, ``Quantum Cryptography Based on Bell's Theorem,'' Phys. Rev. Lett., Volume 67, Number 6, 5 August 1991.
+\bibitem[4]{Rivest}
+  R. Rivest, A. Shamir, and L. Adleman, ``On Digital Signatures and Public Key Cryptosystems,'' Commun. Ass. Comp. Mach., Volume 21 (1978) pp. 120-126.
+\bibitem[5]{Rosing}
+  M Rosing, ``Implementing Elliptic Curve Cryptography,'' Manning Publications, Greenwich (1999) ISBN 1-884777-69-4.
+\bibitem[6]{Weisstein}
+  E. W. Weisstein, ``RSA-640 Factored,'' MathWorld Headline News, 8th November (2005),
+  http://mathworld.wolfram.com/news/2005-11-08/rsa-640/.
+\bibitem[7]{Shor}
+  P. Shor, ``Polynomial-time Algorithms for Prime Factorization and Discrete Logarithms on a Quantum Computer,'' Siam Journal on Computing, Volume 26, Issue 5 (1997) pp. 1484-1509.
+\bibitem[8]{Heninger}
+  N. Heninger, Z. Durumeric, E. Wustrow, J. A. Halderman, ``Mining Your Ps and Qs: Detection of Widespread Weak Keys in Network Devices,'' Proc. 21st USENIX Security Symposium, Aug. 2012.
+\bibitem[9]{Jun}
+  B. Jun, P. Kocher, ``The Intel Random Number Generator,'' Cryptography Research, Inc. white paper prepared for Intel Corp., 22 Apr. 1999.
+\bibitem[10]{Nielsen}
   M. Nielsen and I. Chuang, ``Quantum Computation and Quantum Information,'' Cambridge UP, 2015. Print.
-\bibitem[2]{CSA}
-  Cloud Security Alliance, ``What is Quantum Key Distribution?,'' Quantum-Safe Security Working Group, n.d. Web. 15 Mar. 2017.
-\bibitem[3]{Shor}
-  P. Shor and J. Preskill, ``Simple Proof of Security of the BB84 Quantum Key Distribution Protocol,'' Physical Review Letters, v.85 n.2, 10 Jul. 2000. Print.
-\bibitem[4]{Lance}
-A. Lance and J. Leiseboer, ``What is Quantum Key Distribution,'' Quintessence Labs, 1 Dec. 2014. Web. 15 Mar. 2017.
-% http://www.quintessencelabs.com/wp-content/uploads/2016/08/QKD-What-is-Quantum-Key-Distribution-whitepaper.pdf
 \end{thebibliography}
 
 
