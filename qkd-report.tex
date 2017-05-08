@@ -115,22 +115,22 @@
 % *** GRAPHICS RELATED PACKAGES ***
 %
 \ifCLASSINFOpdf
-  % \usepackage[pdftex]{graphicx}
+\usepackage[pdftex]{graphicx}
   % declare the path(s) where your graphic files are
-  % \graphicspath{{../pdf/}{../jpeg/}}
+\graphicspath{{./images/}}
   % and their extensions so you won't have to specify these with
   % every instance of \includegraphics
-  % \DeclareGraphicsExtensions{.pdf,.jpeg,.png}
+\DeclareGraphicsExtensions{.pdf,.jpeg,.png}
 \else
   % or other class option (dvipsone, dvipdf, if not using dvips). graphicx
   % will default to the driver specified in the system graphics.cfg if no
   % driver is specified.
-  % \usepackage[dvips]{graphicx}
+\usepackage[dvips]{graphicx}
   % declare the path(s) where your graphic files are
-  % \graphicspath{{../eps/}}
+\graphicspath{{./eps/}}
   % and their extensions so you won't have to specify these with
   % every instance of \includegraphics
-  % \DeclareGraphicsExtensions{.eps}
+\DeclareGraphicsExtensions{.eps}
 \fi
 % graphicx was written by David Carlisle and Sebastian Rahtz. It is
 % required if you want graphics, photos, etc. graphicx.sty is already
@@ -169,7 +169,7 @@
 % does. amsmath.sty is already installed on most LaTeX systems. The latest
 % version and documentation can be obtained at:
 % http://www.ctan.org/pkg/amsmath
-
+\usepackage[braket]{qcircuit}
 
 
 
@@ -312,6 +312,7 @@
 
 
 \begin{document}
+\newcommand{\iu}{{i\mkern1mu}}
 %
 % paper title
 % Titles are generally capitalized except for words such as a, an, and, as,
@@ -412,34 +413,42 @@ In practice, private-key systems are seldom used due to limitations of classical
 \end{itemize}
 In order for Alice and Bob to regularly exchange encrypted messages, they would have to meet in secret and generate terabytes of key material each meeting. Alternatively, they could rely on a trusted third party to generate the key material and distribute it to both of them. However, this would mean that the key is not known only to Alice and Bob, intoducing a new potential attack vector and making the key unusable for digital signing. QKD protocols address these limitations of private-key cryptography by providing a method for Alice and Bob to generate truly random, shared key material over long distances, even in the presence of eavesdroppers.\\
 
-\subsection{Quantum Encoding}
-Part of the security of QKD arises from the fact that neither party intends to use any specific key at the outset. Instead, the key is generated truly randomly from quantum mechanical phenomena such as thermal noise\cite{Jun}. In most QKD protocols, we assume Alice begins by generating a long string of truly random classical bits. Her goal is to encode this classical information in the states of quantum bits which are subject to the physical laws discussed in Section I.
+\subsection{Quantum Mechanics}
+Part of the security of QKD arises from the fact that neither party intends to use any specific key at the outset. Instead, the key is generated truly randomly from quantum mechanical phenomena such as thermal noise\cite{Jun}. In most QKD protocols, we assume Alice begins by generating a long string of truly random classical bits. Her goal is to encode this classical information in the states of quantum bits which are subject to the physical laws discussed in Section I.\\
 
+Quantum bits (hence 'qubits') are binary systems like classical bits, with a ``0'' state, \ket{0}, and a ``1'' state, \ket{1}. Unlike classical bits, however, a qubit can exist in a linear combination of these states called a superposition: \[ \alpha\ket{0} + \beta\ket{1}. \]According to the Measurement Postulate\cite{Kaye}, measuring a state \[ \ket{\Psi} = \sum_{i}\alpha_i\ket{\phi_i} \]with respect to the basis $B = \{\ket{\phi_i}\}$ outputs the label $i$ with probability $|\alpha_i|^2$ and leaves the system in state \ket{\phi_i}. Because measurement necessarily collapses a superposition state to one of its basis states, it is impossible for Eve to measure Alice's qubits without disturbing them and revealing her actions.\\
 
-\subsection{Motivation}
-The BB84 protocol for quantum key distribution was originally only proven to be secure against specific classical attacks. However, the algorithm has since been proven to be secure against all possible eavesdropping attacks, including those utilizing the properties of quantum computers\cite{Shor}. The widespread implementation of a secure QKD protocol such as BB84 would greatly enhance the security of private-key cryptosystems, as such a protocol resolves the major weakness of private-key systems: secure key distribution.\\
+In quantum mechanics, measurements correspond to operators called 'observables'. The eigenvectors of an observable represent the possible measurable values of a quantum state and thus form an eigenbasis for the state space in which the observable exists\cite{Wimmel}. If two observables share at least one common eigenbasis, they are said to 'commute' and can be measured simultaneously. If they do not commute, the Heisenberg Uncertainty Principle requires that measuring one observable imparts a minimum degree of disturbance on the other\cite{Williams}. Thus, it is impossible to measure a quantum state with respect to incompatible bases simultaneously.\\
 
-The use of quantum key distribution over conventional key distribution will play an important role in future cryptosystems. Currently, conventional key distributions relies on the trust of third parties to securely distribute keys and ciphers to adequately encrypt messages that are assumed to be infeasible to decrypt with brute-force. Quantum key distribution solves this problem by allowing the generation of key material independently and has the equivalent security of One Time Pad. Research in this area could lead to a larger shift towards this technique with timeless security.\\
+The No-Cloning Theorem states that it is impossible to clone an unknown quantum state\cite{Wootters}. To prove this, assume that there exists some unitary operator $U$ which, when applied to a quantum state \ket{\Psi}, produces a copy of the original state along with the original state. That is, \[ U\ket{\Psi}\rightarrow\ket{\Psi}\ket{\Psi}. \]The contradiction occurs when $U$ is applied to a superposition such as \[ \alpha\ket{0} + \beta\ket{1}. \]Using the linearity of unitary operators, the application of $U$ on such a superposition can be written as \[ U(\alpha\ket{0}) + U(\beta\ket{1})\rightarrow\alpha\ket{00} + \beta\ket{11}. \]However, this is not the result we expect from our definition of cloning. A cloning operator should produce the result \[(\alpha\ket{0} + \beta\ket{1})\otimes(\alpha\ket{0} + \beta\ket{1}), \]which is the original superposition state along with an exact copy of itself. Therefore, it is not possible to clone an unknown state\cite{Williams}.\\
 
+Any two-level quantum mechanical system can be used to implement a qubit. The most common physical examples of qubits are:
+\begin{itemize}
+\item The energy states of electrons in an atom.
+  \begin{itemize}
+  \item \ket{0}, \ket{1} could be defined as ground and excited states, respectively.
+  \end{itemize}
+\item The magnetic spin states of spin-\( \frac{1}{2}\ \)particles such as electrons.
+\item The polarization states of photons.
+\end{itemize}
+This paper will assume qubits are implemented as polarized photons, with the state \ket{0} representing vertical polarization and the state \ket{1} representing horizontal polarization. The possible polarization states of a photon can be visualized geometrically as three-dimensional complex vectors bounded by a unit sphere called the Bloch Sphere (see Fig. \ref{fig:blochSphere}). For example, the pure state \ket{0}, representing vertical polarization, corresponds to the unit vector in the $\hat{\textbf{z}}$ direction. Pure superposition states, where $\theta \neq \{0, \pi\}$ and $||\ket{\psi}|| = 1$, correspond to polarization axes that lie somewhere between horizontal and vertical polarization. If a photon is measured with respect to the $\{\ket{0}, \ket{1}\}$ basis, the probability it will collapse to either basis state depends on $\theta$ as well as $\phi$, the relative phase between the basis states: \[ \ket{\psi} = \cos(\frac{\theta}{2})\ket{0} + e^{\iu\phi}\sin(\frac{\theta}{2})\ket{1}. \]\\
 
-\subsection{Goals}
-We approach this study with three objectives:
+Measuring a photon's polarization with respect to any basis is equivalent to performing a rotation operation and measuring the resulting state in the computational basis, $\{\ket{0}, \ket{1}\}$. For example, to measure the pure state \ket{0} in the Hadamard basis, $\{\frac{1}{\sqrt{2}}(\ket{0}\pm\ket{1})\}$, one can increment $\theta$ by $\frac{\pi}{2}$ to get the state \[ \ket{\psi} = \frac{1}{\sqrt{2}}(\ket{0} + \ket{1}), \] which will collapse to either the \ket{0} or the \ket{1} state with equal probibility when measured in the computational basis. The QKD protocols examined in this paper leverage the fact that the results of a measurement depend on the basis in which the measurement in performed to guarantee that any eavesdropping will be detected with high probability.\\
+\begin{figure}[h]
+  \hspace*{1.2cm}\includegraphics[width=0.4\textwidth]{bloch-sphere.png}
+  \caption{The Bloch Sphere representation of a single qubit\cite{Wikipedia}.}
+  \label{fig:blochSphere}
+  \end{figure}
+
+\section{Survey}
+\subsection{The BB84 Protocol}
+The BB84 protocol, based on Stephen Wiesner's work on conjugate coding\cite{Wiesner}, was the first QKD scheme to be proposed and is the most common QKD protocol used today. Its security relies on the fact that two non-commuting observables cannot be measured simultaneously. The protocol requires Alice and Bob to select one of two orthogonal bases at random when encoding or measuring a polarization state. These bases are the computational basis, $\{\ket{0}, \ket{1}\}$, and the Hadamard basis, $\{\ket{+}, \ket{-}\}$, where $\ket{\pm} = \frac{1}{\sqrt{2}}(\ket{0}\pm\ket{1})$. We have seen that $\{\ket{0}, \ket{1}\}$ correspond to the polarization states \ket{\uparrow} and \ket{\rightarrow}, respectively, and that $\{\ket{+}, \ket{-}\}$ correspond to the polarization states \ket{\nwarrow} and \ket{\nearrow}.\\
+
+Although the two bases appear to be offset from each other by 45 degrees, their Bloch Sphere representation demonstrates their orthogonality. The basis states \ket{\uparrow} and \ket{\downarrow} correspond to the North and South poles of the Bloch sphere, respectively. Likewise, the \ket{\nwarrow} and \ket{\nearrow} states correspond to the East and West antipodal points in the equatorial plane\cite{Williams}.
+
+The BB84 protocol is described as follows:
 \begin{enumerate}
-\setcounter{enumi}{0}
-\item Examine, compare, and explain current QKD systems.
-\item Compare advantages and disvantages of QKD to conventional key distribution.
-\item Show what is required to make QKD practical and more widely used.\\
-\end{enumerate}
-
-\section{Approach}
-
-\subsection{Survey}
-In order to show that quantum key distribution systems will provide more secure encryption than conventional key distributions we will need to perform extensive and in-depth research into both quantum key distribution and conventional key distribution methods. We will explore the weaknesses inherit in the conventional key distributions and attempt to address ways that quantum key distribution will mitigate those weaknesses. In order to best show that quantum key distribution will play a huge and important role in future cryptography we will need to examine the strengths present in this method and compare them to the strengths that are present with conventional key distributions. We will also need to show that the strengths of quantum key distribution will more than make up for any weaknesses we find in quantum key distribution during our research.\\
-
-\section{Deliverables}
-A full report containing an in depth analysis of QKD will be provided along with a brief presentation of the research. These will contain an overview of the most common QKD systems and the math and physics behind their uses, a comparison to conventional key distribution systems and where QKD could be used in their place will also be provided, and an explanation on where current and future research in QKD will be heading.\\
-
-
+  \item Alice
 % An example of a floating figure using the graphicx package.
 % Note that \label must occur AFTER (or within) \caption.
 % For figures, \caption should occur after the \includegraphics.
@@ -564,7 +573,7 @@ Because the quantum state represented by a qubit cannot be observed or copied wi
 % set second argument of \begin to the number of references
 % (used to reserve space for the reference number labels box)
 
-\begin{thebibliography}{10}
+\begin{thebibliography}{15}
 \bibitem[1]{BB84}
   C. H. Bennett and G. Brassard, ``Quantum Cryptography: Public Key Distribution and Coin Tossing,'' Intl. Conf. on Computers, Systems, \& Signal Processing, 12 Dec. 1984.
 \bibitem[2]{B92}
@@ -583,8 +592,19 @@ Because the quantum state represented by a qubit cannot be observed or copied wi
 \bibitem[8]{Heninger}
   N. Heninger, Z. Durumeric, E. Wustrow, J. A. Halderman, ``Mining Your Ps and Qs: Detection of Widespread Weak Keys in Network Devices,'' Proc. 21st USENIX Security Symposium, Aug. 2012.
 \bibitem[9]{Jun}
-  B. Jun, P. Kocher, ``The Intel Random Number Generator,'' Cryptography Research, Inc. white paper prepared for Intel Corp., 22 Apr. 1999.
-\bibitem[10]{Nielsen}
+  B. Jun and P. Kocher, ``The Intel Random Number Generator,'' Cryptography Research, Inc. white paper prepared for Intel Corp., 22 Apr. 1999.
+\bibitem[10]{Kaye}
+  P. Kaye, R. LaFlamme, M. Mosca, \textit{An Introduction to Quantum Computing}, Oxford UP, 2010. Print. ISBN 978-0-19-857049-3.
+\bibitem[11]{Wimmel}
+  H. Wimmel, \textit{Quantum Physics \& Observed Reality: A Critical Interpretation of Quantum Mechanics}, World Scientific, 1992. Print. ISBN 981-02-1010-8.
+\bibitem[12]{Williams}
+  C. Williams, \textit{Explorations in Quantum Computing}, Springer, 2011. Print. ISBN 978-1-84628-886-9.
+\bibitem[13]{Wootters}
+  W. K. Wootters and W. H. Zurek, ``A Single Quantum Cannot Be Cloned,'' Nature, Volume 299, pp. 802-803. 28 Oct. 1982.
+\bibitem[14]{Wikipedia}
+  Wikipedia, the free encyclopedia, ``Bloch Sphere,''
+  URL: https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Bloch\_Sphere.svg/256px-Bloch\_Sphere.svg.png
+\bibitem[15]{Nielsen}
   M. Nielsen and I. Chuang, ``Quantum Computation and Quantum Information,'' Cambridge UP, 2015. Print.
 \end{thebibliography}
 
