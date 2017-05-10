@@ -25,7 +25,6 @@ def bb84(n, eve=False, errorRate=0.0, verbose=True):
     print("\nAlice generates %d random bits to be encoded:\n%s") % (numBits, bitFormat(rawKey))
     print("For each bit, Alice randomly chooses one of two non-orthogonal sets of bases:\n%s") % bitFormat(bases_A)
 
-    """
     if verbose:
         print("\nAlice encodes each bit according to the following strategy:"\
               "\n    value | basis | state"\
@@ -33,7 +32,7 @@ def bb84(n, eve=False, errorRate=0.0, verbose=True):
               "\n      0   |   1   | +0.7071 (|0> + |1>)"\
               "\n      1   |   0   | +1 |1>"\
               "\n      1   |   1   | +0.7071 (|0> - |1>)"\
-              "\nShe then sends each qubit one by one to Bob over a quantum channel.\n")"""
+              "\nShe then sends each qubit one by one to Bob over a quantum channel.\n")
 
     # Alice prepares n qubits, with the kth qubit in state |0> or |1> in either the computational
     # basis or the Hadamard basis, depending on the value of the kth bit in each bitstring
@@ -42,12 +41,11 @@ def bb84(n, eve=False, errorRate=0.0, verbose=True):
     # QKD guarantees with high probability we will detect any eavesdropping
 
     if eve:
-        """
         if verbose:
             print("Eve intercepts each qubit as it travels to Bob. Because it is not possible"\
                   "\nto clone quantum states, she must measure each qubit before re-sending to"\
                   "\nBob. Every time she measures a qubit in the 'wrong' basis, she has a 50%"\
-                  "\nprobability of being detected.\n")"""
+                  "\nprobability of being detected.\n")
 
         # No matter what strategy Eve uses to select bases, the probability she will be detected
         # is always 1-(3/4)^numBits if Alice chose her bases randomly
@@ -58,9 +56,8 @@ def bb84(n, eve=False, errorRate=0.0, verbose=True):
         for k in range(numBits):
             sent_A[k] = eavesdropBB84(sent_A[k], bases_E[k])
 
-            """
         if verbose: print("\nEve attempts to hide her actions by re-encoding her measurement result"\
-                          "\nbefore re-sending the qubits to Bob.\n")"""
+                          "\nbefore re-sending the qubits to Bob.\n")
 
     # Introduce error due to noise
     sent_A = addNoiseBB84(sent_A, errorRate)
@@ -78,21 +75,19 @@ def bb84(n, eve=False, errorRate=0.0, verbose=True):
     key_A, key_B = matchKeysBB84(rawKey, key_B, bases_A, bases_B)
     numBits = len(key_A)
 
-    """
     if verbose:
         print("\nBob announces when he has measured the last qubit and discloses"\
               "\nthe bases he used for each measurement. Alice and Bob then discard"\
-              "\nany bits where they chose different bases.\n")"""
+              "\nany bits where they chose different bases.\n")
 
     print("Alice's key after discarding mismatches:\n%s") % bitFormat(key_A)
     print("Bob's key after discarding mismatches:\n%s") % bitFormat(key_B)
 
     # Alice and Bob sacrifice a subset of their bits to try to detect Eve
     announce_A, key_A, announce_B, key_B = discloseHalf(key_A, key_B)
-    """
     if verbose:
         print("\nAlice and Bob sacrifice %d of their %d shared bits and publicly announce"\
-              "\ntheir values. They agree to disclose every other bit of their shared key.\n") % (len(announce_A), numBits)"""
+              "\ntheir values. They agree to disclose every other bit of their shared key.\n") % (len(announce_A), numBits)
 
     print("Alice's announced bits:\n%s") % bitFormat(announce_A)
     print("Bob's announced bits:\n%s") % bitFormat(announce_B)
@@ -132,22 +127,19 @@ def b92(n, eve=False, errorRate=0.0, verbose=True):
 
     # Alice encodes each bit as a qubit as |0> in either the computational or Hadamard basis
     sent_A = encodeKeyB92(rawKey)
-    """
     if verbose:
         print("Alice encodes each bit according to the following strategy:"\
           "\n    value | state"\
           "\n      0   | +1 |0>"\
           "\n      1   | +0.7071 (|0> + |1>)"\
-          "\nShe then sends each qubit one by one to Bob over a quantum channel.\n")"""
+          "\nShe then sends each qubit one by one to Bob over a quantum channel.\n")
 
     # QKD guarantees with high probability we will detect any eavesdropping
     if eve:
-        """
         if verbose:
             print("Eve intercepts each qubit as it travels to Bob. Because it is not possible"\
-                  "\nto clone quantum states, she must measure each qubit before re-sending to Bob.\n")"""
+                  "\nto clone quantum states, she must measure each qubit before re-sending to Bob.\n")
 
-        # TODO: try different eavesdropping strategies
         # Eve randomly selects a filter to use for each qubit
         bases_E = getRandomBits(numBits)
         print("Eve chooses a random filter to measure each qubit with:\n%s") % bitFormat(bases_E)
@@ -161,9 +153,8 @@ def b92(n, eve=False, errorRate=0.0, verbose=True):
         sent_A = temp
         numBits = len(sent_A)
 
-        """
         if verbose: print("\nEve attempts to hide her actions by re-encoding her measurement result"\
-                          "\nbefore re-sending the qubits to Bob.\n")"""
+                          "\nbefore re-sending the qubits to Bob.\n")
 
     # Introduce error due to noise
     sent_A = addNoiseB92(sent_A, errorRate)
@@ -183,10 +174,9 @@ def b92(n, eve=False, errorRate=0.0, verbose=True):
     key_A, key_B = matchKeysB92(rawKey, key_B)
     numBits = len(key_B)
 
-    """
     if verbose:
         print("\nBob announces which photons were completely absorbed and"\
-          "\nAlice and Bob discard the corresponding bits from their keys.\n")"""
+          "\nAlice and Bob discard the corresponding bits from their keys.\n")
     print("Alice's sifted key:\n%s") % bitFormat(key_A)
     print("Bob's sifted key:\n%s") % bitFormat(key_B)
 
@@ -198,10 +188,9 @@ def b92(n, eve=False, errorRate=0.0, verbose=True):
         return -1
 
     announce_A, key_A, announce_B, key_B = discloseHalf(key_A, key_B)
-    """
     if verbose:
         print("\nAlice and Bob sacrifice %d of their %d shared bits and publicly announce"\
-              "\ntheir values. They agree to disclose every other bit of their shared key.\n") % (len(announce_A), numBits)"""
+              "\ntheir values. They agree to disclose every other bit of their shared key.\n") % (len(announce_A), numBits)
     print("Alice's announced bits:\n%s") % bitFormat(announce_A)
     print("Bob's announced bits:\n%s") % bitFormat(announce_B)
 

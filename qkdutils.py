@@ -185,7 +185,7 @@ def flipStateB92(q):
 
 def flipStateBB84(q):
     """Perform the transformation corresponding to a bit flip on the given quantum state
-    and return it. TODO: is there a better way to simulate noise?
+    and return it.
     """
     if equivState(q, qit.state('0')) or equivState(q, qit.state('1')):
         return q.u_propagate(qit.sx)
