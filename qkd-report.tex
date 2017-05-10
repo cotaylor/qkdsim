@@ -158,7 +158,7 @@
 
 % *** MATH PACKAGES ***
 %
-%\usepackage{amsmath}
+\usepackage{amsmath}
 % A popular package from the American Mathematical Society that provides
 % many useful and powerful commands for dealing with mathematics.
 %
@@ -169,7 +169,8 @@
 % does. amsmath.sty is already installed on most LaTeX systems. The latest
 % version and documentation can be obtained at:
 % http://www.ctan.org/pkg/amsmath
-\usepackage[braket]{qcircuit}
+
+\usepackage[braket,qm]{qcircuit}
 
 
 
@@ -398,7 +399,7 @@ These properties make it impossible for an eavesdropper to gain information abou
 This report will focus on three major protocols for quantum key distribution, namely the BB84 protocol proposed by Bennett and Brassard\cite{BB84}, the B92 protocol proposed by Bennett\cite{B92}, and the E91 protocol proposed by Ekert\cite{E91}. Section II will contain background material on classical cryptography and quantum bits as well as the motivation of this project. Section III will describe the three chosen protocols and compare their strengths and weaknesses. Section IV contains a description of the three simulations, their corresponding unit tests, and results. Section V will discuss the current state of QKD and an alternative six-state protocol. Solutions to selected exercises from Nielsen \& Chuang's \textit{Quantum Computation and Quantum Information} as well as the source code for the simulations will be included in the appendix.\\
 
 \section{Background}
-\subsection{Classical Cryptography}
+\subsection{Classical Cryptography}% TODO: correct RSA
 Most electronic communications today are encrypted using a public-key cipher such as RSA\cite{Rivest}. Public-key algorithms are convenient for everyday use because, unlike private-key systems, they do not require a unique shared key for each pair of users who wish to communicate. Instead, each user possesses a private key, which is used for authentication and digital signing, and a public key, which provides confidentiality. As a result, for a system with $n$ users, any pair of whom wish to communicate, a public-key system only requires $n(n-1)$ total keys, $2n$ of which are unique. For comparison, a similar system using private-key cryptography would require $n(n-1)/2$ unique keys (see Appendix A1). For example, a system with 100 users would require 200 unique keys using RSA and 4950 unique keys using a private-key cipher.\\
 
 However, the limitations of public-key cryptography lie in its reliance on problems which are difficult but not computationally infeasible. The most commonly used public-key cipher, RSA, relies on the difficulty of factoring composite integers\cite{Rivest}. Another type of public-key system, the elliptic curve cipher, relies on the difficulty of computing discrete logarithms\cite{Rosing}. These systems are only considered secure because no polynomial-time algorithm has been found to solve either of these problems. It has been shown that a network of computers can solve RSA classically in sub-exponential time\cite{Weisstein}, and the lower bound on time to solve these problems has not been proven. Additionally, n attacker with a sufficiently complex quantum computer can break RSA and elliptic curve ciphers in polynomial time\cite{Shor}. Although a quantum computer capable of performing Shor's algorithm on 2048-bit RSA keys is not yet practical, advances such as topological quantum computing may render public-key cryptography obsolete in the near future.\\
@@ -439,16 +440,55 @@ Measuring a photon's polarization with respect to any basis is equivalent to per
   \caption{The Bloch Sphere representation of a single qubit\cite{Wikipedia}.}
   \label{fig:blochSphere}
   \end{figure}
-
+% TODO: birefringent crystal?
 \section{Survey}
 \subsection{The BB84 Protocol}
-The BB84 protocol, based on Stephen Wiesner's work on conjugate coding\cite{Wiesner}, was the first QKD scheme to be proposed and is the most common QKD protocol used today. Its security relies on the fact that two non-commuting observables cannot be measured simultaneously. The protocol requires Alice and Bob to select one of two orthogonal bases at random when encoding or measuring a polarization state. These bases are the computational basis, $\{\ket{0}, \ket{1}\}$, and the Hadamard basis, $\{\ket{+}, \ket{-}\}$, where $\ket{\pm} = \frac{1}{\sqrt{2}}(\ket{0}\pm\ket{1})$. We have seen that $\{\ket{0}, \ket{1}\}$ correspond to the polarization states \ket{\uparrow} and \ket{\rightarrow}, respectively, and that $\{\ket{+}, \ket{-}\}$ correspond to the polarization states \ket{\nwarrow} and \ket{\nearrow}.\\
+The BB84 protocol, based on Stephen Wiesner's work on conjugate coding\cite{Wiesner}, was the first QKD scheme to be proposed and is the most common QKD protocol used today. Its security relies on the fact that two non-commuting observables cannot be measured simultaneously. The protocol requires Alice and Bob to select one of two non-orthogonal bases at random when encoding or measuring a polarization state. These bases are the X basis, $\{\ket{0}, \ket{1}\}$, and the Z basis, $\{\ket{+}, \ket{-}\}$, where $\ket{\pm} = \frac{1}{\sqrt{2}}(\ket{0}\pm\ket{1})$. We have seen that $\{\ket{0}, \ket{1}\}$ correspond to the polarization states \ket{\uparrow} and \ket{\rightarrow}, respectively, and that $\{\ket{+}, \ket{-}\}$ correspond to the polarization states \ket{\nwarrow} and \ket{\nearrow}.\\
 
-Although the two bases appear to be offset from each other by 45 degrees, their Bloch Sphere representation demonstrates their orthogonality. The basis states \ket{\uparrow} and \ket{\downarrow} correspond to the North and South poles of the Bloch sphere, respectively. Likewise, the \ket{\nwarrow} and \ket{\nearrow} states correspond to the East and West antipodal points in the equatorial plane\cite{Williams}.
-
-The BB84 protocol is described as follows:
+The BB84 protocol is described as follows\cite{BB84}:
 \begin{enumerate}
-  \item Alice
+\item Alice uses a truly random number generator to obtain $(4 + \delta)n$ random classical bits. These bits form the 'raw key', and a subset of the raw key will form the final key shared between Alice and Bob.
+\item Alice encodes each bit of her random classical bit string in the polarization state of a qubit, according to the following strategy:
+  \begin{itemize}
+  \item If Alice wishes to send a ``0'', she sends the \ket{0} state in either the X basis (\ket{\uparrow}) or the Z basis (\ket{\nwarrow})  with 50\% probability.
+  \item If Alice wishes to send a ``1'', she sends the \ket{1} state in either the X basis (\ket{\rightarrow}) or the Z basis (\ket{\nearrow}) with 50\% probability.
+  \end{itemize}
+\item Alice sends each polarized photon one at a time over a quantum channel to Bob, who measures each using a birefringent crystal. For each qubit, he randomly chooses to orient his crystal to measure in either the X or the Z basis. If Alice and Bob choose the same basis for encoding and decoding, Bob will measure Alice's original bit value, assuming no channel noise or eavesdropping. Otherwise, his measurement result will be completely uncorrelated with Alice's original bit (see Appendix A2).
+\item After measuring the final qubit from Alice, Bob uses an authenticated classical channel to announce his chosen basis for each qubit (but keeping his measured result secret). After Bob has made his announcment, Alice reveals the bases she used to encode the sequence and the two parties discard any bits where they chose differently. In the absence of external noise, the resulting 'sifted' key shared by Alice and Bob must be identical.
+\item Alice and Bob agree to sacrifice a subset of their sifted keys to test for the presence of an eavesdropper. We will show that each time Eve measures a qubit as it travels from Alice to Bob, she will disturb the key in a detectable way with 25\% probability. If Alice and Bob publicly disclose N bits from their sifted keys, they will be able to detect Eve with probability $1 - \frac{3}{4}^N$. Thus, assuming a large enough N it will be extremely unlikely for an eavesdropper to remain undetected.\\
+\end{enumerate}
+
+BB84 Example Run (without Eve):
+\begin{center}
+  \begin{tabular}{|l|c c c c c c c c|}
+    \hline
+    A's random bits & 1 & 0 & 1 & 0 & 0 & 1 & 1 & 0 \\
+    A's bases       & X & Z & Z & Z & X & X & Z & X\\
+    Qubits sent & $\rightarrow$ & $\nwarrow$ & $\nearrow$ & $\nwarrow$ & $\uparrow$ & $\rightarrow$ & $\nearrow$ & $\uparrow$ \\
+    B's bases         & X & X & Z & X & Z & Z & Z & X \\
+    B's results       & 1 & 1 & 1 & 0 & 1 & 0 & 1 & 0 \\
+    \hline
+    Sifted key          & 1 & - & 1 & - & - & - & 1 & 0 \\
+    \hline
+  \end{tabular}
+\end{center}
+
+Eve wishes to obtain information about Alice's qubits without being detected. In Section II, it was demonstrated that the No-Cloning Theorem prohibits Eve from making a copy of each qubit to measure later. Assume instead that Eve uses an ancillary register (hence 'ancilla') prepared in a standard state \ket{u} to interact with the non-orthogonal states \ket{\psi} and \ket{\phi}. Her goal is to distinguish between \ket{\psi} and \ket{\phi} without disturbing either state and revealing her actions. Assuming this is possible, in the first case Eve obtains
+\begin{equation*}
+  \begin{split}
+    &\ket{\psi}\ket{u}\rightarrow\ket{\psi}\ket{v} \\
+    &\ket{\phi}\ket{u}\rightarrow\ket{\phi}\ket{v'}.
+  \end{split}
+\end{equation*}
+To distinguish between the two states, \ket{v} and \ket{v'} must be different. However, we can show that
+\begin{equation*}
+  \begin{split}
+    \ip{v}{v'}\ip{\psi}{\phi}&=\ip{u}{u}\ip{\psi}{\phi} \\
+    \ip{v}{v'}&=\ip{u}{u}=1
+  \end{split}
+\end{equation*}
+since inner products are preserved under unitary transformations\cite{Nielsen}. Thus, it must be the case that distinguishing between two non-orthogonal states necessarily disturbs one of them.\\
+
 % An example of a floating figure using the graphicx package.
 % Note that \label must occur AFTER (or within) \caption.
 % For figures, \caption should occur after the \includegraphics.
@@ -542,14 +582,6 @@ The BB84 protocol is described as follows:
 % Note that, LaTeX2e, unlike IEEE journals/conferences, places
 % footnotes above bottom floats. This can be corrected via the
 % \fnbelowfloat command of the stfloats package.
-
-\section{Conclusion}
-Classical private-key encryption systems are only secure as long as the keys used are exchanged in advance, protected until they are needed, and then destroyed. These limitations are the reason why the key distribution problem is one of the biggest drawbacks of private-key cryptosystems. Quantum Key Distribution protocols provide a possible solution to this problem by exploiting the physical properties of small particles, which comprise the 'qubits' of a quantum computer.\\
-
-Because the quantum state represented by a qubit cannot be observed or copied without disturbing the state, an eavesdropper cannot intercept a key transmitted through a quantum channel without modifying the keystring. By performing a survey of several implementations of quantum key distribution protocols, we will attempt to determine the security advantages and disadvantages QKD offers compared to classical key distribution techniques.\\
-
-% conference papers do not normally have an appendix
-% use section* for acknowledgment
 
 % trigger a \newpage just before the given reference
 % number - used to balance the columns on the last page
