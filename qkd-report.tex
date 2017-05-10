@@ -58,60 +58,6 @@
 % manually specify the path to it like:
 % \documentclass[conference]{../sty/IEEEtran}
 
-
-
-
-
-% Some very useful LaTeX packages include:
-% (uncomment the ones you want to load)
-
-
-% *** MISC UTILITY PACKAGES ***
-%
-%\usepackage{ifpdf}
-% Heiko Oberdiek's ifpdf.sty is very useful if you need conditional
-% compilation based on whether the output is pdf or dvi.
-% usage:
-% \ifpdf
-%   % pdf code
-% \else
-%   % dvi code
-% \fi
-% The latest version of ifpdf.sty can be obtained from:
-% http://www.ctan.org/pkg/ifpdf
-% Also, note that IEEEtran.cls V1.7 and later provides a builtin
-% \ifCLASSINFOpdf conditional that works the same way.
-% When switching from latex to pdflatex and vice-versa, the compiler may
-% have to be run twice to clear warning/error messages.
-
-
-
-
-
-
-% *** CITATION PACKAGES ***
-%
-%\usepackage{cite}
-% cite.sty was written by Donald Arseneau
-% V1.6 and later of IEEEtran pre-defines the format of the cite.sty package
-% \cite{} output to follow that of the IEEE. Loading the cite package will
-% result in citation numbers being automatically sorted and properly
-% "compressed/ranged". e.g., [1], [9], [2], [7], [5], [6] without using
-% cite.sty will become [1], [2], [5]--[7], [9] using cite.sty. cite.sty's
-% \cite will automatically add leading space, if needed. Use cite.sty's
-% noadjust option (cite.sty V3.8 and later) if you want to turn this off
-% such as if a citation ever needs to be enclosed in parenthesis.
-% cite.sty is already installed on most LaTeX systems. Be sure and use
-% version 5.0 (2009-03-20) and later if using hyperref.sty.
-% The latest version can be obtained at:
-% http://www.ctan.org/pkg/cite
-% The documentation is contained in the cite.sty file itself.
-
-
-
-
-
-
 % *** GRAPHICS RELATED PACKAGES ***
 %
 \ifCLASSINFOpdf
@@ -152,13 +98,10 @@
 % You can find documentation about the pdfTeX application at:
 % http://www.tug.org/applications/pdftex
 
-
-
-
-
 % *** MATH PACKAGES ***
 %
 \usepackage{amsmath}
+\usepackage{gensymb}
 % A popular package from the American Mathematical Society that provides
 % many useful and powerful commands for dealing with mathematics.
 %
@@ -171,142 +114,6 @@
 % http://www.ctan.org/pkg/amsmath
 
 \usepackage[braket,qm]{qcircuit}
-
-
-
-
-% *** SPECIALIZED LIST PACKAGES ***
-%
-%\usepackage{algorithmic}
-% algorithmic.sty was written by Peter Williams and Rogerio Brito.
-% This package provides an algorithmic environment fo describing algorithms.
-% You can use the algorithmic environment in-text or within a figure
-% environment to provide for a floating algorithm. Do NOT use the algorithm
-% floating environment provided by algorithm.sty (by the same authors) or
-% algorithm2e.sty (by Christophe Fiorio) as the IEEE does not use dedicated
-% algorithm float types and packages that provide these will not provide
-% correct IEEE style captions. The latest version and documentation of
-% algorithmic.sty can be obtained at:
-% http://www.ctan.org/pkg/algorithms
-% Also of interest may be the (relatively newer and more customizable)
-% algorithmicx.sty package by Szasz Janos:
-% http://www.ctan.org/pkg/algorithmicx
-
-
-
-
-% *** ALIGNMENT PACKAGES ***
-%
-%\usepackage{array}
-% Frank Mittelbach's and David Carlisle's array.sty patches and improves
-% the standard LaTeX2e array and tabular environments to provide better
-% appearance and additional user controls. As the default LaTeX2e table
-% generation code is lacking to the point of almost being broken with
-% respect to the quality of the end results, all users are strongly
-% advised to use an enhanced (at the very least that provided by array.sty)
-% set of table tools. array.sty is already installed on most systems. The
-% latest version and documentation can be obtained at:
-% http://www.ctan.org/pkg/array
-
-
-% IEEEtran contains the IEEEeqnarray family of commands that can be used to
-% generate multiline equations as well as matrices, tables, etc., of high
-% quality.
-
-
-
-
-% *** SUBFIGURE PACKAGES ***
-%\ifCLASSOPTIONcompsoc
-%  \usepackage[caption=false,font=normalsize,labelfont=sf,textfont=sf]{subfig}
-%\else
-%  \usepackage[caption=false,font=footnotesize]{subfig}
-%\fi
-% subfig.sty, written by Steven Douglas Cochran, is the modern replacement
-% for subfigure.sty, the latter of which is no longer maintained and is
-% incompatible with some LaTeX packages including fixltx2e. However,
-% subfig.sty requires and automatically loads Axel Sommerfeldt's caption.sty
-% which will override IEEEtran.cls' handling of captions and this will result
-% in non-IEEE style figure/table captions. To prevent this problem, be sure
-% and invoke subfig.sty's "caption=false" package option (available since
-% subfig.sty version 1.3, 2005/06/28) as this is will preserve IEEEtran.cls
-% handling of captions.
-% Note that the Computer Society format requires a larger sans serif font
-% than the serif footnote size font used in traditional IEEE formatting
-% and thus the need to invoke different subfig.sty package options depending
-% on whether compsoc mode has been enabled.
-%
-% The latest version and documentation of subfig.sty can be obtained at:
-% http://www.ctan.org/pkg/subfig
-
-
-
-
-% *** FLOAT PACKAGES ***
-%
-%\usepackage{fixltx2e}
-% fixltx2e, the successor to the earlier fix2col.sty, was written by
-% Frank Mittelbach and David Carlisle. This package corrects a few problems
-% in the LaTeX2e kernel, the most notable of which is that in current
-% LaTeX2e releases, the ordering of single and double column floats is not
-% guaranteed to be preserved. Thus, an unpatched LaTeX2e can allow a
-% single column figure to be placed prior to an earlier double column
-% figure.
-% Be aware that LaTeX2e kernels dated 2015 and later have fixltx2e.sty's
-% corrections already built into the system in which case a warning will
-% be issued if an attempt is made to load fixltx2e.sty as it is no longer
-% needed.
-% The latest version and documentation can be found at:
-% http://www.ctan.org/pkg/fixltx2e
-
-
-%\usepackage{stfloats}
-% stfloats.sty was written by Sigitas Tolusis. This package gives LaTeX2e
-% the ability to do double column floats at the bottom of the page as well
-% as the top. (e.g., "\begin{figure*}[!b]" is not normally possible in
-% LaTeX2e). It also provides a command:
-%\fnbelowfloat
-% to enable the placement of footnotes below bottom floats (the standard
-% LaTeX2e kernel puts them above bottom floats). This is an invasive package
-% which rewrites many portions of the LaTeX2e float routines. It may not work
-% with other packages that modify the LaTeX2e float routines. The latest
-% version and documentation can be obtained at:
-% http://www.ctan.org/pkg/stfloats
-% Do not use the stfloats baselinefloat ability as the IEEE does not allow
-% \baselineskip to stretch. Authors submitting work to the IEEE should note
-% that the IEEE rarely uses double column equations and that authors should try
-% to avoid such use. Do not be tempted to use the cuted.sty or midfloat.sty
-% packages (also by Sigitas Tolusis) as the IEEE does not format its papers in
-% such ways.
-% Do not attempt to use stfloats with fixltx2e as they are incompatible.
-% Instead, use Morten Hogholm'a dblfloatfix which combines the features
-% of both fixltx2e and stfloats:
-%
-% \usepackage{dblfloatfix}
-% The latest version can be found at:
-% http://www.ctan.org/pkg/dblfloatfix
-
-
-
-
-% *** PDF, URL AND HYPERLINK PACKAGES ***
-%
-%\usepackage{url}
-% url.sty was written by Donald Arseneau. It provides better support for
-% handling and breaking URLs. url.sty is already installed on most LaTeX
-% systems. The latest version and documentation can be obtained at:
-% http://www.ctan.org/pkg/url
-% Basically, \url{my_url_here}.
-
-
-
-
-% *** Do not adjust lengths that control margins, column widths, etc. ***
-% *** Do not use packages that alter fonts (such as pslatex).         ***
-% There should be no need to do such things with IEEEtran.cls V1.6 and later.
-% (Unless specifically asked to do so by the journal or conference you plan
-% to submit to, of course. )
-
 
 % correct bad hyphenation here
 %\hyphenation{op-tical net-works semi-conduc-tor}
@@ -335,32 +142,6 @@
 % the acknowledgment of grants, issue a \IEEEoverridecommandlockouts
 % after \documentclass
 
-% for over three affiliations, or if they all won't fit within the width
-% of the page, use this alternative format:
-%
-%\author{\IEEEauthorblockN{Michael Shell\IEEEauthorrefmark{1},
-%Homer Simpson\IEEEauthorrefmark{2},
-%James Kirk\IEEEauthorrefmark{3},
-%Montgomery Scott\IEEEauthorrefmark{3} and
-%Eldon Tyrell\IEEEauthorrefmark{4}}
-%\IEEEauthorblockA{\IEEEauthorrefmark{1}School of Electrical and Computer Engineering\\
-%Georgia Institute of Technology,
-%Atlanta, Georgia 30332--0250\\ Email: see http://www.michaelshell.org/contact.html}
-%\IEEEauthorblockA{\IEEEauthorrefmark{2}Twentieth Century Fox, Springfield, USA\\
-%Email: homer@thesimpsons.com}
-%\IEEEauthorblockA{\IEEEauthorrefmark{3}Starfleet Academy, San Francisco, California 96678-2391\\
-%Telephone: (800) 555--1212, Fax: (888) 555--1212}
-%\IEEEauthorblockA{\IEEEauthorrefmark{4}Tyrell Inc., 123 Replicant Street, Los Angeles, California 90210--4321}}
-
-
-
-
-% use for special paper notices
-%\IEEEspecialpapernotice{(Invited Paper)}
-
-
-
-
 % make the title area
 \maketitle
 
@@ -371,9 +152,6 @@ Private-key ciphers such as the One Time Pad are the only cryptographic systems 
 \end{abstract}
 
 % no keywords
-
-
-
 
 % For peer review papers, you can put extra information on the cover
 % page as needed:
@@ -396,10 +174,10 @@ QKD protocols exploit three physical laws governing quantum bits such as polariz
 \end{enumerate}
 These properties make it impossible for an eavesdropper to gain information about a quantum key without changing it. We assume two parties, Alice and Bob, wish to establish a shared key while minimizing their mutual information with an eavesdropper, Eve. Even if Eve is allowed to intercept and modify Alice's and Bob's communication over the quantum channel, she will be unable to conceal her measurements and will be detected through classical error analysis. We assume that Eve is also capable of intercepting the classical communication between Alice and Bob, but that she is unable to alter their messages in any way. Therefore, as long as Alice and Bob use an authenticated classical channel and perform error correction and privacy amplification on their keys, Eve will be unable to gain any useful information.\\
 
-This report will focus on three major protocols for quantum key distribution, namely the BB84 protocol proposed by Bennett and Brassard\cite{BB84}, the B92 protocol proposed by Bennett\cite{B92}, and the E91 protocol proposed by Ekert\cite{E91}. Section II will contain background material on classical cryptography and quantum bits as well as the motivation of this project. Section III will describe the three chosen protocols and compare their strengths and weaknesses. Section IV contains a description of the three simulations, their corresponding unit tests, and results. Section V will discuss the current state of QKD and an alternative six-state protocol. Solutions to selected exercises from Nielsen \& Chuang's \textit{Quantum Computation and Quantum Information} as well as the source code for the simulations will be included in the appendix.\\
+This report will focus on three major protocols for quantum key distribution, namely the BB84 protocol proposed by Bennett and Brassard\cite{BB84}, the B92 protocol proposed by Bennett\cite{B92}, and the E91 protocol proposed by Ekert\cite{E91}. Section II will contain background material on classical cryptography and quantum bits as well as the motivation of this project. Section III will describe the three chosen protocols and compare their strengths and weaknesses. Section IV contains a description of the three simulations and their unit tests. Section V will conclude with a discussion of the practicality of QKD. Solutions to selected exercises from Nielsen \& Chuang's \textit{Quantum Computation and Quantum Information} as well as outputs from the simulations are included in the Appendix.\\
 
 \section{Background}
-\subsection{Classical Cryptography}% TODO: correct RSA
+\subsection{Classical Cryptography}
 Most electronic communications today are encrypted using a public-key cipher such as RSA\cite{Rivest}. Public-key algorithms are convenient for everyday use because, unlike private-key systems, they do not require a unique shared key for each pair of users who wish to communicate. Instead, each user possesses a private key, which is used for authentication and digital signing, and a public key, which provides confidentiality. As a result, for a system with $n$ users, any pair of whom wish to communicate, a public-key system only requires $n(n-1)$ total keys, $2n$ of which are unique. For comparison, a similar system using private-key cryptography would require $n(n-1)/2$ unique keys (see Appendix A1). For example, a system with 100 users would require 200 unique keys using RSA and 4950 unique keys using a private-key cipher.\\
 
 However, the limitations of public-key cryptography lie in its reliance on problems which are difficult but not computationally infeasible. The most commonly used public-key cipher, RSA, relies on the difficulty of factoring composite integers\cite{Rivest}. Another type of public-key system, the elliptic curve cipher, relies on the difficulty of computing discrete logarithms\cite{Rosing}. These systems are only considered secure because no polynomial-time algorithm has been found to solve either of these problems. It has been shown that a network of computers can solve RSA classically in sub-exponential time\cite{Weisstein}, and the lower bound on time to solve these problems has not been proven. Additionally, n attacker with a sufficiently complex quantum computer can break RSA and elliptic curve ciphers in polynomial time\cite{Shor}. Although a quantum computer capable of performing Shor's algorithm on 2048-bit RSA keys is not yet practical, advances such as topological quantum computing may render public-key cryptography obsolete in the near future.\\
@@ -440,7 +218,7 @@ Measuring a photon's polarization with respect to any basis is equivalent to per
   \caption{The Bloch Sphere representation of a single qubit\cite{Wikipedia}.}
   \label{fig:blochSphere}
   \end{figure}
-% TODO: birefringent crystal?
+
 \section{Survey}
 \subsection{The BB84 Protocol}
 The BB84 protocol, based on Stephen Wiesner's work on conjugate coding\cite{Wiesner}, was the first QKD scheme to be proposed and is the most common QKD protocol used today. Its security relies on the fact that two non-commuting observables cannot be measured simultaneously. The protocol requires Alice and Bob to select one of two non-orthogonal bases at random when encoding or measuring a polarization state. These bases are the X basis, $\{\ket{0}, \ket{1}\}$, and the Z basis, $\{\ket{+}, \ket{-}\}$, where $\ket{\pm} = \frac{1}{\sqrt{2}}(\ket{0}\pm\ket{1})$. We have seen that $\{\ket{0}, \ket{1}\}$ correspond to the polarization states \ket{\uparrow} and \ket{\rightarrow}, respectively, and that $\{\ket{+}, \ket{-}\}$ correspond to the polarization states \ket{\nwarrow} and \ket{\nearrow}.\\
@@ -448,17 +226,18 @@ The BB84 protocol, based on Stephen Wiesner's work on conjugate coding\cite{Wies
 The BB84 protocol is described as follows\cite{BB84}:
 \begin{enumerate}
 \item Alice uses a truly random number generator to obtain $(4 + \delta)n$ random classical bits. These bits form the 'raw key', and a subset of the raw key will form the final key shared between Alice and Bob.
-\item Alice encodes each bit of her random classical bit string in the polarization state of a qubit, according to the following strategy:
+\item Alice encodes each bit of her random classical bit string in the polarization state of a photon, according to the following strategy:
   \begin{itemize}
   \item If Alice wishes to send a ``0'', she sends the \ket{0} state in either the X basis (\ket{\uparrow}) or the Z basis (\ket{\nwarrow})  with 50\% probability.
   \item If Alice wishes to send a ``1'', she sends the \ket{1} state in either the X basis (\ket{\rightarrow}) or the Z basis (\ket{\nearrow}) with 50\% probability.
   \end{itemize}
 \item Alice sends each polarized photon one at a time over a quantum channel to Bob, who measures each using a birefringent crystal. For each qubit, he randomly chooses to orient his crystal to measure in either the X or the Z basis. If Alice and Bob choose the same basis for encoding and decoding, Bob will measure Alice's original bit value, assuming no channel noise or eavesdropping. Otherwise, his measurement result will be completely uncorrelated with Alice's original bit (see Appendix A2).
 \item After measuring the final qubit from Alice, Bob uses an authenticated classical channel to announce his chosen basis for each qubit (but keeping his measured result secret). After Bob has made his announcment, Alice reveals the bases she used to encode the sequence and the two parties discard any bits where they chose differently. In the absence of external noise, the resulting 'sifted' key shared by Alice and Bob must be identical.
-\item Alice and Bob agree to sacrifice a subset of their sifted keys to test for the presence of an eavesdropper. We will show that each time Eve measures a qubit as it travels from Alice to Bob, she will disturb the key in a detectable way with 25\% probability. If Alice and Bob publicly disclose N bits from their sifted keys, they will be able to detect Eve with probability $1 - \frac{3}{4}^N$. Thus, assuming a large enough N it will be extremely unlikely for an eavesdropper to remain undetected.\\
+\item Alice and Bob agree to announce and then discard a subset of their sifted keys to test for the presence of an eavesdropper. We will show that each time Eve measures a qubit as it travels from Alice to Bob, she will disturb the key in a detectable way with 25\% probability. If Alice and Bob publicly disclose N bits from their sifted keys, they will be able to detect Eve with probability $1 - \frac{3}{4}^N$. Thus, assuming a large enough N it will be extremely unlikely for an eavesdropper to remain undetected.\\
 \end{enumerate}
 
-BB84 Example Run (without Eve):
+\begin{table}[h]
+\caption{BB84 Example Run (without Eve)}
 \begin{center}
   \begin{tabular}{|l|c c c c c c c c|}
     \hline
@@ -468,10 +247,12 @@ BB84 Example Run (without Eve):
     B's bases         & X & X & Z & X & Z & Z & Z & X \\
     B's results       & 1 & 1 & 1 & 0 & 1 & 0 & 1 & 0 \\
     \hline
-    Sifted key          & 1 & - & 1 & - & - & - & 1 & 0 \\
+    A's key        & 1 & - & 1 & - & - & - & 1 & 0 \\
+    B's key        & 1 & - & 1 & - & - & - & 1 & 0 \\
     \hline
   \end{tabular}
 \end{center}
+\end{table}
 
 Eve wishes to obtain information about Alice's qubits without being detected. In Section II, it was demonstrated that the No-Cloning Theorem prohibits Eve from making a copy of each qubit to measure later. Assume instead that Eve uses an ancillary register (hence 'ancilla') prepared in a standard state \ket{u} to interact with the non-orthogonal states \ket{\psi} and \ket{\phi}. Her goal is to distinguish between \ket{\psi} and \ket{\phi} without disturbing either state and revealing her actions. Assuming this is possible, in the first case Eve obtains
 \begin{equation*}
@@ -489,123 +270,169 @@ To distinguish between the two states, \ket{v} and \ket{v'} must be different. H
 \end{equation*}
 since inner products are preserved under unitary transformations\cite{Nielsen}. Thus, it must be the case that distinguishing between two non-orthogonal states necessarily disturbs one of them.\\
 
-% An example of a floating figure using the graphicx package.
-% Note that \label must occur AFTER (or within) \caption.
-% For figures, \caption should occur after the \includegraphics.
-% Note that IEEEtran v1.7 and later has special internal code that
-% is designed to preserve the operation of \label within \caption
-% even when the captionsoff option is in effect. However, because
-% of issues like this, it may be the safest practice to put all your
-% \label just after \caption rather than within \caption{}.
-%
-% Reminder: the "draftcls" or "draftclsnofoot", not "draft", class
-% option should be used if it is desired that the figures are to be
-% displayed while in draft mode.
-%
-%\begin{figure}[!t]
-%\centering
-%\includegraphics[width=2.5in]{myfigure}
-% where an .eps filename suffix will be assumed under latex,
-% and a .pdf suffix will be assumed for pdflatex; or what has been declared
-% via \DeclareGraphicsExtensions.
-%\caption{Simulation results for the network.}
-%\label{fig_sim}
-%\end{figure}
+Because of these limitations, Eve must resort to an intercept-resend strategy that will introduce bit flip errors in Bob's sifted key with high probability. Eve intercepts each of Alice's photons as they travel along the quantum channel to Bob. She measures each photon randomly in either the X or Z basis and records the result. In an attempt to disguise her interference, she re-encodes her result in her chosen basis and forwards the new photon to Bob. As demonstrated for Bob, 50\% of the time Eve and Alice will choose different bases and their bit values will be completely uncorrelated. If this is the case, Eve has a 50\% chance of encoding her result such that Alice, Bob, and Eve all share the same value. By employing this strategy, Eve is able to gain information about 50\% of the key. However, for each photon she measures, she has a 25\% probability of introducing a bit-flip error and revealing her actions.\\
 
-% Note that the IEEE typically puts floats only at the top, even when this
-% results in a large percentage of a column being occupied by floats.
+In practice, however, bit-flip errors ofter occur naturally due to imperfections in the quantum channel. One bit-flip error is not sufficient for Alice and Bob to distinguish between channel noise and eavesdropping. Instead, they must estimate a Quantum Bit Error Rate (QBER) for the channel to compare to their measured error rate. If the measured error rate deviates significantly from the QBER, Alice and Bob simply abort the protocol and try again on another channel. Thus, Eve must only measure a small subset of the $(4+\delta)n$ qubits to minimize the number of errors she introduces.\\
 
+\begin{table}[h]
+\caption{BB84 Example Run (with Eve)}
+\begin{center}
+  \begin{tabular}{|l|c c c c c c c c|}
+    \hline
+    A's random bits & 0 & 1 & 1 & 0 & 1 & 1 & 1 & 0\\
+    A's bases       & X & Z & Z & X & Z & X & X & X\\
+    Qubits sent & $\uparrow$ & $\nearrow$ & $\nearrow$ & $\uparrow$ & $\nearrow$ & $\rightarrow$ & $\rightarrow$ & $\uparrow$\\
+    E's bases       & Z & Z & X & Z & X & X & Z & Z\\
+    E's results     & 1 & 1 & 1 & 0 & 0 & 1 & 0 & 0\\
+    New qubits  & $\nearrow$ & $\nearrow$ & $\rightarrow$ & $\nwarrow$ & $\uparrow$ & $\rightarrow$ & $\nwarrow$ & $\nwarrow$\\
+    B's bases       & X & X & Z & X & Z & Z & X & X\\
+    B's results     & 0 & 1 & 0 & 1 & 0 & 1 & 0 & 0\\
+    \hline
+    A's key         & 0 & - & 1 & 0 & 1 & - & 1 & 0\\
+    B's key         & 0 & - & 0 & 1 & 0 & - & 0 & 0\\
+    \hline
+  \end{tabular}
+\end{center}
+\end{table}
 
-% An example of a double column floating figure using two subfigures.
-% (The subfig.sty package must be loaded for this to work.)
-% The subfigure \label commands are set within each subfloat command,
-% and the \label for the overall figure must come after \caption.
-% \hfil is used as a separator to get equal spacing.
-% Watch out that the combined width of all the subfigures on a
-% line do not exceed the text width or a line break will occur.
-%
-%\begin{figure*}[!t]
-%\centering
-%\subfloat[Case I]{\includegraphics[width=2.5in]{box}%
-%\label{fig_first_case}}
-%\hfil
-%\subfloat[Case II]{\includegraphics[width=2.5in]{box}%
-%\label{fig_second_case}}
-%\caption{Simulation results for the network.}
-%\label{fig_sim}
-%\end{figure*}
-%
-% Note that often IEEE papers with subfigures do not employ subfigure
-% captions (using the optional argument to \subfloat[]), but instead will
-% reference/describe all of them (a), (b), etc., within the main caption.
-% Be aware that for subfig.sty to generate the (a), (b), etc., subfigure
-% labels, the optional argument to \subfloat must be present. If a
-% subcaption is not desired, just leave its contents blank,
-% e.g., \subfloat[].
+It is easy to see that the four states used in this protocol lie in the same plane in the Bloch sphere. The basis states of the X basis correspond to the North and South poles of the Bloch sphere, and the basis states of the Z basis correspond to the East-West antipodal points\cite{Williams}. However, there are two more non-orthogonal states perpendicular to this plane which are not used in BB84. Increasing the number of bases from two to three leads to the 'six-state protocol', a generalization of BB84 which can be shown to reduce the information obtainable by an attacker (see Appendix A4).\\
 
+\subsection{Post-Processing}
+In the real world, assuming an imperfect channel, Alice's and Bob's sifted keys will contain errors with high probability, even in the absence of eavesdroppers. To correct these errors and guarantee their keys are identical they will need to perform some classical error reconciliation protocol. The CASCADE protocol\cite{Salvail} allows Alice and Bob to correct errors in their keys over a public classical channel without disclosing significant information about their keys. Using their sacrificed bits from step $(5)$ of BB84, Alice and Bob can establish $p*$, an estimate of the probability a bit is flipped in their sifted keys. They then proceed with the CASCADE protocol as follows\cite{Williams}:
+\begin{enumerate}
+\item Alice and Bob choose a block size based on $p*$ and segment their keys $K_A$ and $K_B$.
+\item They perform their own parity measurement on each block and announce the results.
+\item If the parity values for a given block differ, that block must contain an odd number of bit-flip errors. If this is the case, Alice and Bob perform the following recursive algorithm\cite{Salvail}:
+  \begin{enumerate}
+  \item Alice sends Bob the parity of the first half of her block.
+  \item Bob determines which half contains the odd number of errors by comparing his parity with Alice's.
+  \item This process is repeated until the error is found, then Bob flips his value to correct.
+  \end{enumerate}
+\item Alice and Bob repeat the protocol until they are confident that no errors remain.
+\end{enumerate}
 
-% An example of a floating table. Note that, for IEEE style tables, the
-% \caption command should come BEFORE the table and, given that table
-% captions serve much like titles, are usually capitalized except for words
-% such as a, an, and, as, at, but, by, for, in, nor, of, on, or, the, to
-% and up, which are usually not capitalized unless they are the first or
-% last word of the caption. Table text will default to \footnotesize as
-% the IEEE normally uses this smaller font for tables.
-% The \label must come after \caption as always.
-%
-%\begin{table}[!t]
-%% increase table row spacing, adjust to taste
-%\renewcommand{\arraystretch}{1.3}
-% if using array.sty, it might be a good idea to tweak the value of
-% \extrarowheight as needed to properly center the text within the cells
-%\caption{An Example of a Table}
-%\label{table_example}
-%\centering
-%% Some packages, such as MDW tools, offer better commands for making tables
-%% than the plain LaTeX2e tabular which is used here.
-%\begin{tabular}{|c||c|}
-%\hline
-%One & Two\\
-%\hline
-%Three & Four\\
-%\hline
-%\end{tabular}
-%\end{table}
+After a sufficient number of applications, the CASCADE protocol will guarantee that Alice and Bob share the same key. Although this protocol is relatively simple to implement compared to other error correction schemes, it requires a large amount of communication overhead. Alice and Bob must announce a parity value for each block, and $\log_2 k$ bits for each $k$-bit block with an odd number of errors. For example, if they estimate a QBER of 5\% using 1000-bit keys with $k=15$, they will need to exchange approximately 350 parity values for a single application of CASCADE\cite{Johnson}. An alternative technique using sparce matrices called Low Density Parity Check (LDPC) codes\cite{Gallager} can be used to provide the same result with much lower overhead\cite{MacKay}.\\
 
+After error reconciliation, it is still possible for an eavesdropper to have obtained a small amount of information about the shared key. This information can come from the initial transmission of photons, assuming Eve chose a small enough $N$ to avoid detection, or from the parities exchanged during error reconciliation. Alice and Bob should now apply a classical privacy amplification algorithm to generate a shorter, secure key that Eve has no information about.\\
 
-% Note that the IEEE does not put floats in the very first column
-% - or typically anywhere on the first page for that matter. Also,
-% in-text middle ("here") positioning is typically not used, but it
-% is allowed and encouraged for Computer Society conferences (but
-% not Computer Society journals). Most IEEE journals/conferences use
-% top floats exclusively.
-% Note that, LaTeX2e, unlike IEEE journals/conferences, places
-% footnotes above bottom floats. This can be corrected via the
-% \fnbelowfloat command of the stfloats package.
+Privacy amplification is typically accomplished using an authenticated two-universal hash function. A hash function $f$ is two-universal if for any distinct $x_a,x_b\in X$, the random variables $f(x_a)$ and $f(x_b)$ are independent and uniformly distributed\cite{Renner}. We can determine the amount of information leaked by measuring the uncertainty in Alice's and Bob's key strings. The Shannon entropy, $H(X)$, measures the uncertainty of a random variable $X$. Let $X$ and $Y$ be random variables over the finite sets $\{0,1\}^n$ and $\{0,1\}^r$. Then the Shannon entropy of $X$, $H(X)$, and the Shannon entropy of $X$ conditioned on $Y$, $H(X|Y)$, are defined as
+\begin{equation*}
+  \begin{split}
+    H(X) = -\sum_{x\in X}Pr[X = x&]\log_2 Pr[X = x],\\
+    H(X|Y) = -\sum_{x\in X}Pr[X = x|Y =& y]\log_2 Pr[X = x|Y = y].\\
+  \end{split}
+\end{equation*}
+The mutual information\cite{Ribeiro} between two random variables $X$ and $Y$, $I(X,Y)$ is defined as \[ I(X,Y) = H(X) - H(X|Y). \]Assume Alice's original bits form string $X$, Bob's measurement results form string $Y$, and $Z$ represents the information known to Eve. After Alice and Bob input their matching keys into an authenticated two-universal hash function, we get the result \[ I(X,Y)\approx 0. \]\\
 
-% trigger a \newpage just before the given reference
-% number - used to balance the columns on the last page
-% adjust value as needed - may need to be readjusted if
-% the document is modified later
-%\IEEEtriggeratref{8}
-% The "triggered" command can be changed if desired:
-%\IEEEtriggercmd{\enlargethispage{-5in}}
+\subsection{The B92 Protocol}
+In 1992, Bennett\cite{B92} showed that only two non-orthogonal states are necessary to perform quantum key distribution, as opposed to the four required in BB84 (\ket{\uparrow}, \ket{\rightarrow}, \ket{\nwarrow}, and \ket{\nearrow}). This is accomplished by replacing the birefringent crystals used in BB84 with polarization filters, which transmit or absorb photons probabilistically based on the angle between the axis of measurement and the axis of polarization. For example, a vertically polarized photon measured with a vertical polarization filter will be transmitted with 100\% probability, while a horizontally polarized photon will be absorbed by the same filter with 100\% probability. A photon polarized at $\pm45\degree$ will be either transmitted or absorbed with 50\% probability. It is important to note that the polarization axis of a transmitted photon is necessarily aligned with the axis of the filter, and thus the original state information is lost when measured.\\
 
-% references section
-% can use a bibliography generated by BibTeX as a .bbl file
-% BibTeX documentation can be easily obtained at:
-% http://mirror.ctan.org/biblio/bibtex/contrib/doc/
-% The IEEEtran BibTeX style support page is at:
-% http://www.michaelshell.org/tex/ieeetran/bibtex/
-%\bibliographystyle{IEEEtran}
-% argument is your BibTeX string definitions and bibliography database(s)
-%\bibliography{IEgEEabrv,../bib/paper}
-%
-% <OR> manually copy in the resultant .bbl file
-% set second argument of \begin to the number of references
-% (used to reserve space for the reference number labels box)
+The B92 protocol is described as follows\cite{B92}:
+\begin{enumerate}
+\item Alice uses a truly random number generator to obtain a long string of random classical bits. As in BB84, these bits form Alice's raw key.
+\item Alice encodes each bit of her random classical bit string in the polarization state of a photon, according to the following strategy:
+  \begin{itemize}
+  \item If Alice wishes to send a ``0'', she sends the \ket{0} state in the X basis, \ket{\uparrow}.
+  \item If Alice wishes to send a ``1'', she sends the \ket{0} state in the Z basis, \ket{\nwarrow}.
+  \end{itemize}
+\item Bob randomly chooses one of two polarization filters to measure each photon with. The first possible polarizer is oriented such that it transmits the state \ket{\nearrow} and blocks the state\ket{\nwarrow}. If Alice's original bit value was ``1'', her qubit will be absorbed with 100\% probability. Otherwise it will be either transmitted or absorbed with 50\% probability. Thus this filter can only test whether Alice sent a ``0''. The other possible filter transmits the state \ket{\rightarrow} and absorbs the state \ket{\uparrow}, effectively testing for the value ``1''. Thus, Bob will only obtain a measurement result for 25\% of the photons sent by Alice. If Bob does obtain a result, however, he knows that his bit value for that photon is perfectly correlated with Alice's (see Appendix A3).
+\item After measuring the final qubit from Alice, Bob uses an authenticated classical channel to announce the photons for which he obtained a measurement result (but keeping his measured result secret). Since Alice knows the original bit values she sent, she can figure out the results of Bob's measurements and derive the same shared key as Bob.
+\item As in BB84, Alice and Bob attempt to detect any eavesdropping by comparing and discarding a subset of their sifted keys. They also monitor the number of qubits lost during the protocol to prevent against an attack specific to B92.\\
+\end{enumerate}
+\begin{table}[h]
+  \caption{Example run of B92 (without Eve)}
+  \begin{center}
+    \begin{tabular}{|l|c c c c c c c c|}
+      \hline
+      A's random bits & 1 & 0 & 0 & 0 & 1 & 0 & 1 & 1\\
+      Qubits sent & $\nwarrow$ & $\uparrow$ & $\uparrow$ & $\uparrow$ & $\nwarrow$ & $\uparrow$ & $\nwarrow$ & $\nwarrow$\\
+      B tests for     & 1 & 1 & 0 & 0 & 1 & 1 & 1 & 0\\
+      B's results     & 1 & - & - & 0 & - & - & 1 & -\\
+      \hline
+      A's key         & 1 & - & - & 0 & - & - & 1 & -\\
+      B's key         & 1 & - & - & 0 & - & - & 1 & -\\
+      \hline
+    \end{tabular}
+  \end{center}
+\end{table}
 
-\begin{thebibliography}{15}
+While B92 requires fewer states than BB84, making it easier to implement, the fact that most of the photons are discarded leaves it vulnerable to a subtle eavesdropping strategy. While we have demonstrated that distinguishing between non-orthogonal states is impossible, Eve can simply discard failed attempts to determine Alice's raw key with 100\% accuracy\cite{Williams}. The only way for Alice and Bob to detect this type of attack is to establish an expected qubit loss rate for the channel and compare it with the actual loss rate. However, if Eve controls the quantum channel while Alice and Bob perform their setup, she may be able to manipulate the expected loss rate and avoid detection. As a result of this vulnerability, B92 is rarely implemented in real-world QKD systems.\\
+
+\subsection{The E91 Protocol}
+The E91 protocol, developed by Artur Ekert\cite{E91}, uses quantum entanglement to provide a guarantee of security. To provide context to this protocol, we must examine two assumptions made in 1935 by Einstein, Podolski, and Rosen\cite{EPR}:
+\begin{itemize}
+\item Reality: The value of a measurement exists even before the measurement takes place.
+\item Locality: The measurement result for one object has no influence on the reality of distant objects.
+\end{itemize}
+In 1964, Bell demonstrated that measuring the state of one entangled particle immediately collapses the state of its complement, regardless of the distance between them\cite{Bell}. This defies the theory of local realism described by EPR and represents the incompatibility between classical and quantum mechanics.\\
+
+The E91 protocol is described as follows\cite{E91}:
+\begin{enumerate}
+\item Alice and Bob acquire $n$ sets of entangled qubits in the singlet state \[ \frac{1}{\sqrt{2}}(\ket{01} - \ket{10}), \] distributing one qubit from each pair to Alice and the other to Bob. Either party could generate the pairs and send half of the qubits to the other, or they could rely on a trusted third party to generate the entangled pairs.
+\item For each qubit, Alice chooses an angle uniformly at random from the set \[ {\phi_i}^A = \{0, \frac{\pi}{8}, \frac{\pi}{4}\}. \]She then rotates the vertical-horizontal basis by her chosen angle around the z-axis and measures the qubit with respect to the new basis. Bob then does the same, instead choosing his angle from the set \[ {\phi_j}^B = \{0, \frac{\pi}{8}, \frac{-\pi}{8}\}. \]
+\item If Alice and Bob orient their measurement devices the same way, Bob's result will be perfectly anti-correlated with Alice's. That is, in two of the nine cases, Alice and Bob will always measure opposite bit values and can therefore establish a shared key.
+\item The measurement values of qubits where Alice and Bob chose different measurement axes are announced and used to calculate the correlation coefficient of their measurements:
+  \begin{equation*}
+    \begin{split}
+      E({\phi_i}^A, {\phi_j}^B) = &P_{00}({\phi_i}^A,{\phi_j}^B) + P_{11}({\phi_i}^A,{\phi_j}^B)\\
+      - &P_{01}({\phi_i}^A,{\phi_j}^B) - P_{10}({\phi_i}^A,{\phi_j}^B),\\
+    \end{split}
+  \end{equation*}
+  where $P_{00}$ represents the probability of Alice and Bob both obtaining 0 as the measurement result.
+\item Alice and Bob calculate the quantity
+  \begin{equation*}
+    \begin{split}
+      S = &E({\phi_1}^A,{\phi_2}^B) + E({\phi_1}^A,{\phi_4}^B)\\
+      + &E({\phi_3}^A,{\phi_2}^B) - E({\phi_3}^A,{\phi_4}^B),\\
+    \end{split}
+  \end{equation*}
+  composed from the correlation coefficients for which Alice and Bob chose different measurement axes. Bell's Theorem requires that, in the absence of an eavesdropper, $S=-2\sqrt{2}$\cite{Clauser}. If this does not match Alice's and Bob's measurements, then they detect Eve's interference and abort the protocol.\\
+\end{enumerate}
+
+\begin{table}[h]
+  \caption{Example Run of E91 (without Eve)}
+  \begin{center}
+    \begin{tabular}{|l|c c c c c c c c c c c c|}
+      \hline
+      A's bases   & 2 & 2 & 1 & 3 & 1 & 1 & 3 & 1 & 3 & 1 & 1 & 2\\
+      B's bases   & 1 & 4 & 1 & 2 & 4 & 1 & 2 & 1 & 2 & 4 & 2 & 2\\
+      A's results & 0 & 1 & 1 & 0 & 1 & 0 & 0 & 0 & 1 & 1 & 0 & 0\\
+      B's results & 1 & 1 & 0 & 0 & 1 & 1 & 0 & 1 & 0 & 0 & 1 & 1\\
+      \hline
+      A's key     & - & - & 1 & - & - & 0 & - & 0 & - & - & - & 0\\
+      B's key     & - & - & 1 & - & - & 0 & - & 0 & - & - & - & 0\\
+      \hline
+    \end{tabular}
+  \end{center}
+\end{table}
+The security of the E91 protocol lies in the fact that neither Alice nor Bob generates the key material to send to the other. Instead, the key does not exist until Alice and Bob perform their measurements, meaning Eve cannot perform an intercept-resend attack as in BB84. Any attempt by Eve to substitute her own prepared data for Alice's and Bob's communication is the same as introducing elements of physical reality to the quantum system, bounding S to $-\sqrt{2}\leq S\leq\sqrt{2}$ and thus revealing her actions\cite{Bouwmeester}.\\
+
+\section{Simulations}
+Each of the simulations prepared for this project was written in Python 2.7. Each uses the following modules:
+\begin{itemize}
+\item NumPy for random sampling and bitwise operations
+\item PyCrypto for cryptographic random number generation
+\item The Quantum Information Toolkit (QIT) to represent and measure quantum states
+  \item Nose for unit testing
+\end{itemize}
+Each simulation accepts a desired key length as well as optional parameters to control eavesdropping or the QBER. It then performs the selected protocol up to the sifting phase and returns the sifted key, or failure in the case that an eavesdropper is detected. The Appendix of this report contains three outputs for the BB84 and B92 protocols:
+\begin{itemize}
+\item One run with no channel noise and no eavesdropping which yields identical keys.
+\item One run with a small amount of channel noise but no eavesdropping, leading to key errors but not an abortion of the protocol.
+\item One run with channel noise and eavesdropping, which Alice and Bob detect.
+\end{itemize}
+The E91 simulation does not simulate an eavesdropper due to the difficulty of implementing Eve's optimal strategy.\\
+
+Three of the eleven unit tests, test\_bb84(), test\_b92(), and test\_e91(), simply perform 20 trials of the appropriate protocol with a desired key size of 2048 bits and assert that a shared key is successfully established. Two of the tests, test\_decodeStateBB84\_probabilistic() and test\_getRandomBits(), are probabilistic and assert that expected probabilities are met for large key sizes. The remaining six tests verify deterministic cases, such as measuring an entangled state along two identical axes of measurement.\\
+
+\section{Conclusion}
+Quantum key distribution is one of the most developed ideas quantum computing, as it is one of the only applications of quantum computing with practical implementations in industry. However, classical public-key schemes remain the dominant method of distributing key material in the real world. The advantages of QKD over classical key distribution are immediately apparent, since breaking the security of QKD requires an attacker to violate fundamental physical laws. As technological advances lead to improvements in range and transmission rates, we may see protocols such as BB84 become the standard for key distribution in the near future.\\
+
+Each of the three protocols surveyed has its own advantages and disadvantages relative to the others. The protocol most likely to be adopted on a large scale is BB84, as it is relatively intuitive, easy to implement, and provably secure. The E91 protocol, which relies on entangled particles, provides a similar guarantee of security to BB84 but is not as well-documented or intuitive, making it an unlikely candidate for a QKD standard. E91 shows potential at longer distances, however, as it can be implemented without the use of a noisy quantum channel if Alice and Bob generate their entangled pairs in person and save them until the protocol is performed. B92, while originally celebrated as a more intuitive version of BB84, will likely not see much real-world implementation due to the extra monitoring and precautions it requires.\\
+
+Besides relatively poor range and transmission rates, the largest barrier to adoption for QKD is the difficulty of producing specific quantum states outside of the laboratory. In all protocols, but especially in E91, users will likely be forced to rely on a trusted third party to generate and distribute the necessary qubits. While protocols like BB84 have the potential to replace classical key distribution schemes, significant advances in hardware will be necessary before QKD becomes practical for the average user.\\
+
+\begin{thebibliography}{26}
 \bibitem[1]{BB84}
   C. H. Bennett and G. Brassard, ``Quantum Cryptography: Public Key Distribution and Coin Tossing,'' Intl. Conf. on Computers, Systems, \& Signal Processing, 12 Dec. 1984.
 \bibitem[2]{B92}
@@ -636,12 +463,31 @@ since inner products are preserved under unitary transformations\cite{Nielsen}. 
 \bibitem[14]{Wikipedia}
   Wikipedia, the free encyclopedia, ``Bloch Sphere,''
   URL: https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Bloch\_Sphere.svg/256px-Bloch\_Sphere.svg.png
-\bibitem[15]{Nielsen}
+\bibitem[15]{Wiesner}
+  S. Wiesner, ``Conjugate Coding,'' SIGACT News, Volume 15, Number 1, Jan. 1982.
+\bibitem[16]{Nielsen}
   M. Nielsen and I. Chuang, ``Quantum Computation and Quantum Information,'' Cambridge UP, 2015. Print.
+\bibitem[17]{Salvail}
+  G. Brassard and L. Salvail, ``Secret-Key Reconciliation by Public Discussion,'' Proc. Eurocrypt 93 Workshop on the Theory and Application of Cryptographic Techniques, pp. 410-423, 23-27 May 1993.
+\bibitem[18]{Johnson}
+  J. Johnson, ``An Analysis of Error Reconciliation Protocols for Use in Quantum Key Distribution,'' Master's Thesis, Air Force Institute of Technology, Feb. 2012.
+\bibitem[19]{Gallager}
+  R. Gallager, ``Low-Density Parity-Check Codes,'' Doctoral Thesis, Massachusetts Institute of Technology, 1960.
+\bibitem[20]{MacKay}
+  D. J. MacKay, ``Good Error-Correcting Codes Based on Very Sparse Matrices,'' IEEE Transactions on Information Theory, Jan. 1999.
+\bibitem[21]{Renner}
+  R. Renner, R. K\"onig, ``Universally Composable Privacy Amplification Against Quantum Adversaries,'' In: Kilian J (eds) Theory of Cryptography, TCC 2005. Lecture Notes in Computer Science, Volume 3378. Springer, Berlin, Heidelberg.
+\bibitem[22]{Ribeiro}
+  A. S. Ribeiro, S. A. Kauffman, J. Lloyd-Price, B. Samuelsson, and J. Socolar, ``Mutual Information in Random Boolean Models of Regulatory Networks,'' Physical Review E, 77(1):011901, 2008.
+\bibitem[23]{EPR}
+  A. Einstein, B. Podolski, N. Rosen, ``Can Quantum-Mechanical Description of Physical Reality be Considered Complete?'' Phys. Rev. 47 (10), pp. 777-780. 1935.
+\bibitem[24]{Bell}
+  J. S. Bell, ``On the Einstein-Podolski-Rosen Paradox,'' Physics. 1, pp. 195-200. 1964.
+\bibitem[25]{Clauser}
+  J. F. Clauser, M. A. Horne, A. Shimony, R. A. Holt, ``Proposed Experiment to Test Local Hidden-Variable Theories,'' Phys. Rev. Lett. 23 (15), pp. 880-884. 1969.
+\bibitem[26]{Bouwmeester}
+  D. Bouwmeester, A. Ekert, A. Zeilinger, ``The Physics of Quantum Information,'' Springer-Verlag, Berlin, 2000.
 \end{thebibliography}
-
-
-
 
 % that's all folks
 \end{document}

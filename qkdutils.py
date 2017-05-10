@@ -24,7 +24,7 @@ def addNoiseBB84(bits, errorRate):
 
 def bitFormat(bits):
     """Return a printable representation of the given list of bools representing bits."""
-    if len(bits) < 64:
+    if len(bits) < 56:
         return '[' + ', '.join(['1' if b == True else '0' if b == False else '-' for b in bits]) + ']'
     else:
         temp = ""
