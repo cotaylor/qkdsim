@@ -462,7 +462,7 @@ Besides relatively poor range and transmission rates, the largest barrier to ado
   W. K. Wootters and W. H. Zurek, ``A Single Quantum Cannot Be Cloned,'' Nature, Volume 299, pp. 802-803. 28 Oct. 1982.
 \bibitem[14]{Wikipedia}
   Wikipedia, the free encyclopedia, ``Bloch Sphere,''
-  URL: https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Bloch\_Sphere.svg/256px-Bloch\_Sphere.svg.png
+  URL: upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Bloch\_Sphere.svg/256px-Bloch\_Sphere.svg.png
 \bibitem[15]{Wiesner}
   S. Wiesner, ``Conjugate Coding,'' SIGACT News, Volume 15, Number 1, Jan. 1982.
 \bibitem[16]{Nielsen}
@@ -488,6 +488,29 @@ Besides relatively poor range and transmission rates, the largest barrier to ado
 \bibitem[26]{Bouwmeester}
   D. Bouwmeester, A. Ekert, A. Zeilinger, ``The Physics of Quantum Information,'' Springer-Verlag, Berlin, 2000.
 \end{thebibliography}
+
+\appendix
+\section{Appendix A}
+\begin{itemize}
+\item [A1)] Exercise 12.25: Consider a system with $n$ users, any pair of which would like to be able to communicate privately. Using public key cryptography how many keys are required? Using private key cryptography how many keys are required?
+  \begin{itemize}
+  \item [a] Using public key cryptography, each user has 2 keys: 1 public and 1 private. Thus there are $2n$ unique keys. Since each of the $n$ users needs a copy of the other $n-1$ public keys plus their private key, there is a total of $n^2$ key copies required.
+  \item [b] Using private key cryptography, each unique pair of users requires a unique shared key. This can be visualized as a complete graph, with $n$ nodes representing users. We know that for a complete graph with $n$ nodes, there are $\frac{n(n-1)}{2}$ edges, so there must be $\frac{n(n-1)}{2}$ keys.
+  \end{itemize}
+\item [A2)] Exercise 12.26: Let $a_k, a'_k$ be Alice's and Bob's classical bit values associated with qubit \ket{\psi_{{a_k}{b_k}}} in the BB84 protocol, and let $b_k, b'_k$ be Alice and Bob's randomly chosen bases. Assuming a noiseless channel with no eavesdropping, show that when $b'_k\neq b_k$, $a'_k$ is random and completely uncorrelated with $a_k$. But when $b'_k=b_k$, $a'_=a_k$.
+  \begin{itemize}
+  \item [a] When $b'_k\neq b_k$, Alice's and Bob's bases are offset by 45\degree. This is equivalent to measuring the state \[ \frac{1}{\sqrt{2}}(\ket{0}\pm\ket{1}) \]in the computational basis, which yields either ``0'' or ``1'' with 50\% probability. Thus, in this case $a'_k$ is random and completely uncorrelated with $a_k$.
+  \item [b] When $b'_k= b_k$, Alice's and Bob's bases are identical. Since Alice's encoding is a pure state with probability amplitude of $1$, Bob's measurement will deterministically return $a'_k=a_k$.
+  \end{itemize}
+\item [A3)] Exercise 12.28: Let $a$ represent Alice's raw key, $a'$ represent Bob's chosen filter orientation, and $b$ represent Bob's measurement result for each qubit in the B92 protocol. Show that when $b=1$, then $a$ and $a'$ are perfectly correlated with each other.
+  \begin{itemize}
+  \item [a] Consider the case where $a=a'=0$: Alice sends Bob the \ket{0} state, which he measures in the X basis, yielding ``0'' with 100\% probability. If $a=a'=1$, Alice sends Bob the ``0'' state in the Z basis, $\frac{1}{\sqrt{2}}(\ket{0}+\ket{1})$, and Bob measures in the Z basis to obtain ``0'' with 100\% probability. Bob can only obtain ``1'' when $a\neq a'$, and in this case he measures ``1'' with 50\% probability. However, if he measures ``1'' he knows that his $a'$ is necessarily $1-a$ and thus $a$ and $a'$ are perfectly correlated.
+  \end{itemize}
+\item [A4)] Exercise 12.29: Give a protocol using six states, the eigenstates of X, Y, and Z, and argue why it is also secure. Discuss the sensitivity of this protocol to noise and eavesdropping, in comparison with that of BB84 and B92.
+  \begin{itemize}
+  \item [a] The three bases in a six-state protocol would be the X basis, $\{\ket{0},\ket{1}\}$, the Z basis, $\{\frac{1}{\sqrt{2}}(\ket{0}\pm\ket{1})\}$, and the Y basis, $\{\frac{1}{\sqrt{2}}(\ket{0}\pm\iu\ket{1})\}$. In this scheme, Alice and Bob have a $\frac{1}{3}$ probability of choosing the same basis instead of the $\frac{1}{2}$ probability in BB84. This means that more qubits will be discarded during sifting, but it also increases the likelihood of detecting Eve each time she measures a quantum state. Eve now has a $\frac{2}{3}$ probability of choosing the wrong basis, and when this occurs she has a $\frac{1}{2}$ probability of re-encoding the wrong value. Thus, if she measures every qubit, the QBER for the six-state protocol will be 33\% instead of the 25\% for BB84.
+  \end{itemize}
+\end{itemize}
 
 % that's all folks
 \end{document}
