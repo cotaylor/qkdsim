@@ -1,7 +1,7 @@
 from qkdutils import *
 
 # TODO: testing
-import bb84, b92
+import bb84, b92, e91
 import _qkdutils as util
 
 def simulateBB84(n, eve=False, errorRate=0.0, verbose=True):
@@ -211,7 +211,7 @@ def simulateB92(n, eve=False, errorRate=0.0, verbose=True):
 
     return key_A
 
-def e91(n, errorRate=0.0, verbose=True):
+def simulateE91(n, errorRate=0.0, verbose=True):
     """Simulation of Ekert's 1991 entanglement-based protocol for quantum key distribution."""
     numBits = 5 * n
 
@@ -228,24 +228,24 @@ def e91(n, errorRate=0.0, verbose=True):
     #     [0, pi/8, pi/4]
     # Bob randomly offsets his axis of measurement by one of the following:
     #     [0, pi/8, -pi/8]
-    bases_A, bases_B = chooseAxesE91(numBits)
+    bases_A, bases_B = e91.chooseAxes(numBits)
     key_A, key_B = [], []
 
     for j in range(numBits):
-        (new_A, new_B) = measureEntangledState(bases_A[j], bases_B[j], errorRate)
+        (new_A, new_B) = e91.measureEntangledState(bases_A[j], bases_B[j], errorRate)
         key_A.append(new_A)
         key_B.append(new_B)
 
-    print("Alice's randomly chosen axes of measurement:\n%s" % formatBasesE91(bases_A))
-    print("Bob's randomly chosen axes of measurement:\n%s" % formatBasesE91(bases_B))
-    print("Alice's measurement results:\n%s" % bitFormat(key_A))
-    print("Bob's measurement results:\n%s" % bitFormat(key_B))
+    print("Alice's randomly chosen axes of measurement:\n%s" % e91.formatBasesForPrint(bases_A))
+    print("Bob's randomly chosen axes of measurement:\n%s" % e91.formatBasesForPrint(bases_B))
+    print("Alice's measurement results:\n%s" % util.bitFormat(key_A))
+    print("Bob's measurement results:\n%s" % util.bitFormat(key_B))
 
-    key_A, key_B, discard_A, discard_B = matchKeysE91(key_A, key_B, bases_A, bases_B)
-    print("Alice's %d discarded bits:\n%s" % (len(discard_A), bitFormat(discard_A)))
-    print("Bob's %d discarded bits:\n%s" % (len(discard_B), bitFormat(discard_B)))
+    key_A, key_B, discard_A, discard_B = e91.matchKeys(key_A, key_B, bases_A, bases_B)
+    print("Alice's %d discarded bits:\n%s" % (len(discard_A), util.bitFormat(discard_A)))
+    print("Bob's %d discarded bits:\n%s" % (len(discard_B), util.bitFormat(discard_B)))
 
-    print("Alice's %d-bit sifted key:\n%s" % (len(key_A), bitFormat(key_A)))
-    print("Bob's %d-bit sifted key:\n%s" % (len(key_B), bitFormat(key_B)))
+    print("Alice's %d-bit sifted key:\n%s" % (len(key_A), util.bitFormat(key_A)))
+    print("Bob's %d-bit sifted key:\n%s" % (len(key_B), util.bitFormat(key_B)))
 
     return key_A
