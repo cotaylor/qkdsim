@@ -63,8 +63,7 @@ def flipState(state):
     """Perform the transformation corresponding to a bit flip on the given quantum state
     and return it.
     """
-    if util.equivState(state, qit.state('0')) or /
-       util.equivState(state, qit.state('1')):
+    if util.equivState(state, qit.state('0')) or util.equivState(state, qit.state('1')):
         return state.u_propagate(qit.sx)
     else:
         return state.u_propagate(qit.sz)

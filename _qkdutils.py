@@ -50,6 +50,6 @@ def equivState(state1, state2):
 def getRandomBits(length):
     """Return a list of bits with given length, each either 0 or 1 with equal probability."""
     bitstring = []
-    for j in range(n):
+    for j in range(length):
         bitstring.append(random.choice([True, False]))
     return bitstring

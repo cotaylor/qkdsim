@@ -4,7 +4,7 @@ from qkdutils import *
 import bb84
 import _qkdutils as util
 
-def bb84(n, eve=False, errorRate=0.0, verbose=True):
+def simulateBB84(n, eve=False, errorRate=0.0, verbose=True):
     """Simulation of Bennett & Brassard's 1984 protocol for quantum key distribution with
     n initial bits in the raw key.
     If eve is set to True, assumes the presence of an eavesdropper attempting an
