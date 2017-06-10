@@ -1,5 +1,6 @@
 import numpy as np
 import qit
+import _qkdutils as util
 
 def simulateNoise(bits, errorRate):
     """Simulate channel noise for the B92 protocol."""
@@ -18,7 +19,7 @@ def decodeState(state, basis):
     """
     # Save the original bit Alice sent
     aliceBit = True
-    if equivState(state, qit.state('0')):
+    if util.equivState(state, qit.state('0')):
         aliceBit = False
 
     # Apply chosen filter
