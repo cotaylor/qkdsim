@@ -52,7 +52,7 @@ def matchKeys(key1, key2, bases1, bases2):
     return (key1, key2, discard1, discard2)
 
 def measureEntangledState(basisA, basisB, errorRate=0.0):
-        """Return Alice and Bob's measurement results on a pair of maximally
+    """Return Alice and Bob's measurement results on a pair of maximally
     entangled qubits. basis[A,B] contain Alice and Bob's axes of mstment.
     """
     # Alice measures either basis state with equal probability
