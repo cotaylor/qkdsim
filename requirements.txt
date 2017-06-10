@@ -1,0 +1,9 @@
+#
+##### requirements.txt #####
+#
+nose
+pycrypto
+qit
+numpy
+scipy
+#
