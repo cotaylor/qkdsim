@@ -1,7 +1,7 @@
 from qkdutils import *
 
 # TODO: testing
-import bb84
+import bb84, b92
 import _qkdutils as util
 
 def simulateBB84(n, eve=False, errorRate=0.0, verbose=True):
@@ -109,7 +109,7 @@ def simulateBB84(n, eve=False, errorRate=0.0, verbose=True):
 
     return key_A
 
-def b92(n, eve=False, errorRate=0.0, verbose=True):
+def simulateB92(n, eve=False, errorRate=0.0, verbose=True):
     """Simulation of Bennet's 1992 protocol for quantum key distribution with n initial
     bits in the raw key. If eve is set to True, assumes the presence of an eavesdropper
     attempting an intercept-resend attack. errorRate represents the probability that a bit
@@ -126,11 +126,11 @@ def b92(n, eve=False, errorRate=0.0, verbose=True):
         else: print("without channel noise")
 
     # Alice generates a random bit string to be encoded
-    rawKey = getRandomBits(numBits)
-    print("\nAlice generates %d random bits to be encoded:\n%s" % (numBits, bitFormat(rawKey)))
+    rawKey = util.getRandomBits(numBits)
+    print("\nAlice generates %d random bits to be encoded:\n%s" % (numBits, util.bitFormat(rawKey)))
 
     # Alice encodes each bit as a qubit as |0> in either the computational or Hadamard basis
-    sent_A = encodeKeyB92(rawKey)
+    sent_A = b92.encodeKey(rawKey)
     if verbose:
         print("Alice encodes each bit according to the following strategy:"\
           "\n    value | state"\
@@ -145,13 +145,13 @@ def b92(n, eve=False, errorRate=0.0, verbose=True):
                   "\nto clone quantum states, she must measure each qubit before re-sending to Bob.\n")
 
         # Eve randomly selects a filter to use for each qubit
-        bases_E = getRandomBits(numBits)
-        print("Eve chooses a random filter to measure each qubit with:\n%s" % bitFormat(bases_E))
+        bases_E = util.getRandomBits(numBits)
+        print("Eve chooses a random filter to measure each qubit with:\n%s" % util.bitFormat(bases_E))
 
         # Eve measures each qubit and attempts to cover her tracks
         temp = []
         for k in range(numBits):
-            result = eavesdropB92(sent_A[k], bases_E[k])
+            result = b92.simulateEavesdrop(sent_A[k], bases_E[k])
             if result != None: temp.append(result)
 
         sent_A = temp
@@ -161,28 +161,28 @@ def b92(n, eve=False, errorRate=0.0, verbose=True):
                           "\nbefore re-sending the qubits to Bob.\n")
 
     # Introduce error due to noise
-    sent_A = addNoiseB92(sent_A, errorRate)
+    sent_A = b92.simulateNoise(sent_A, errorRate)
 
     # Bob measures each qubit in a randomly chosen basis
-    bases_B = getRandomBits(numBits)
+    bases_B = util.getRandomBits(numBits)
     key_B = []
     for k in range(numBits):
-        result = decodeStateB92(sent_A[k], bases_B[k])
+        result = b92.decodeState(sent_A[k], bases_B[k])
         if result == None: key_B.append(-1)
         else: key_B.append(result)
 
-    print("Bob chooses a random filter to measure each qubit with:\n%s" % bitFormat(bases_B))
-    print("Bob's measurement results:\n%s" % bitFormat(key_B))
+    print("Bob chooses a random filter to measure each qubit with:\n%s" % util.bitFormat(bases_B))
+    print("Bob's measurement results:\n%s" % util.bitFormat(key_B))
 
     # Discard bits where Bob did not see a result
-    key_A, key_B = matchKeysB92(rawKey, key_B)
+    key_A, key_B = b92.matchKeys(rawKey, key_B)
     numBits = len(key_B)
 
     if verbose:
         print("\nBob announces which photons were completely absorbed and"\
           "\nAlice and Bob discard the corresponding bits from their keys.\n")
-    print("Alice's sifted key:\n%s" % bitFormat(key_A))
-    print("Bob's sifted key:\n%s" % bitFormat(key_B))
+    print("Alice's sifted key:\n%s" % util.bitFormat(key_A))
+    print("Bob's sifted key:\n%s" % util.bitFormat(key_B))
 
     # Compare key information
     if len(key_A) != len(key_B):
@@ -191,21 +191,21 @@ def b92(n, eve=False, errorRate=0.0, verbose=True):
               "\nEve's interference and abort the protocol.\n" % (len(key_A), len(key_B)))
         return -1
 
-    announce_A, key_A, announce_B, key_B = discloseHalf(key_A, key_B)
+    announce_A, key_A, announce_B, key_B = util.discloseHalf(key_A, key_B)
     if verbose:
         print("\nAlice and Bob sacrifice %d of their %d shared bits and publicly announce"\
               "\ntheir values. They agree to disclose every other bit of their shared key.\n" % (len(announce_A), numBits))
-    print("Alice's announced bits:\n%s" % bitFormat(announce_A))
-    print("Bob's announced bits:\n%s" % bitFormat(announce_B))
+    print("Alice's announced bits:\n%s" % util.bitFormat(announce_A))
+    print("Bob's announced bits:\n%s" % util.bitFormat(announce_B))
 
     numBits = len(key_A)
-    print("Alice's remaining %d-bit key:\n%s" % (numBits, bitFormat(key_A)))
-    print("Bob's remaining %d-bit key:\n%s" % (numBits, bitFormat(key_B)))
+    print("Alice's remaining %d-bit key:\n%s" % (numBits, util.bitFormat(key_A)))
+    print("Bob's remaining %d-bit key:\n%s" % (numBits, util.bitFormat(key_B)))
 
     print("Expected error rate: %f" % errorRate)
     print("Actual error rate: %f" % (float(sum([1 for k in range(len(key_A)) if key_A[k] != key_B[k]]))/len(key_A)))
 
-    if detectEavesdrop(key_A, key_B, errorRate):
+    if util.detectEavesdrop(key_A, key_B, errorRate):
         print("\nAlice and Bob detect Eve's interference and abort the protocol.\n")
         return -1
 
