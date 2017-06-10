@@ -9,7 +9,7 @@ def bb84(n, eve=False, errorRate=0.0, verbose=True):
     numBits = 5 * n
 
     if verbose:
-        print("\n=====BB84 protocol=====\n%d initial bits, ~%d key bits") % (numBits, n)
+        print("\n=====BB84 protocol=====\n%d initial bits, ~%d key bits" % (numBits, n))
         if eve: print("with eavesdropping")
         else: print("without eavesdropping")
         if errorRate: print("with channel noise")
@@ -22,8 +22,8 @@ def bb84(n, eve=False, errorRate=0.0, verbose=True):
     # 0: computational basis; 1: Hadamard basis
     bases_A = getRandomBits(numBits)
 
-    print("\nAlice generates %d random bits to be encoded:\n%s") % (numBits, bitFormat(rawKey))
-    print("For each bit, Alice randomly chooses one of two non-orthogonal sets of bases:\n%s") % bitFormat(bases_A)
+    print("\nAlice generates %d random bits to be encoded:\n%s" % (numBits, bitFormat(rawKey)))
+    print("For each bit, Alice randomly chooses one of two non-orthogonal sets of bases:\n%s" % bitFormat(bases_A))
 
     if verbose:
         print("\nAlice encodes each bit according to the following strategy:"\
@@ -50,7 +50,7 @@ def bb84(n, eve=False, errorRate=0.0, verbose=True):
         # No matter what strategy Eve uses to select bases, the probability she will be detected
         # is always 1-(3/4)^numBits if Alice chose her bases randomly
         bases_E = getRandomBits(numBits)
-        print("Eve chooses a random basis to measure each qubit in:\n%s") % bitFormat(bases_E)
+        print("Eve chooses a random basis to measure each qubit in:\n%s" % bitFormat(bases_E))
 
         # Eve measures each qubit and attempts to cover her tracks
         for k in range(numBits):
@@ -68,8 +68,8 @@ def bb84(n, eve=False, errorRate=0.0, verbose=True):
     for k in range(numBits):
         key_B.append(decodeStateBB84(sent_A[k], bases_B[k]))
 
-    print("Bob chooses a random basis to measure each qubit in:\n%s") % bitFormat(bases_B)
-    print("Bob's measurement results:\n%s") % bitFormat(key_B)
+    print("Bob chooses a random basis to measure each qubit in:\n%s" % bitFormat(bases_B))
+    print("Bob's measurement results:\n%s" % bitFormat(key_B))
 
     # Alice and Bob discard any bits where they chose different bases.
     key_A, key_B = matchKeysBB84(rawKey, key_B, bases_A, bases_B)
@@ -80,24 +80,24 @@ def bb84(n, eve=False, errorRate=0.0, verbose=True):
               "\nthe bases he used for each measurement. Alice and Bob then discard"\
               "\nany bits where they chose different bases.\n")
 
-    print("Alice's key after discarding mismatches:\n%s") % bitFormat(key_A)
-    print("Bob's key after discarding mismatches:\n%s") % bitFormat(key_B)
+    print("Alice's key after discarding mismatches:\n%s" % bitFormat(key_A))
+    print("Bob's key after discarding mismatches:\n%s" % bitFormat(key_B))
 
     # Alice and Bob sacrifice a subset of their bits to try to detect Eve
     announce_A, key_A, announce_B, key_B = discloseHalf(key_A, key_B)
     if verbose:
         print("\nAlice and Bob sacrifice %d of their %d shared bits and publicly announce"\
-              "\ntheir values. They agree to disclose every other bit of their shared key.\n") % (len(announce_A), numBits)
+              "\ntheir values. They agree to disclose every other bit of their shared key.\n" % (len(announce_A), numBits))
 
-    print("Alice's announced bits:\n%s") % bitFormat(announce_A)
-    print("Bob's announced bits:\n%s") % bitFormat(announce_B)
+    print("Alice's announced bits:\n%s" % bitFormat(announce_A))
+    print("Bob's announced bits:\n%s" % bitFormat(announce_B))
 
     numBits = len(key_A)
-    print("Alice's remaining %d-bit key:\n%s") % (numBits, bitFormat(key_A))
-    print("Bob's remaining %d-bit key:\n%s") % (numBits, bitFormat(key_B))
+    print("Alice's remaining %d-bit key:\n%s" % (numBits, bitFormat(key_A)))
+    print("Bob's remaining %d-bit key:\n%s" % (numBits, bitFormat(key_B)))
 
-    print("Expected error rate: %f") % errorRate
-    print("Actual error rate: %f") % (float(sum([1 for k in range(len(key_A)) if key_A[k] != key_B[k]]))/len(key_A))
+    print("Expected error rate: %f" % errorRate)
+    print("Actual error rate: %f" % (float(sum([1 for k in range(len(key_A)) if key_A[k] != key_B[k]]))/len(key_A)))
 
     if detectEavesdrop(key_A, key_B, errorRate):
         print("\nAlice and Bob detect Eve's interference and abort the protocol.")
@@ -115,7 +115,7 @@ def b92(n, eve=False, errorRate=0.0, verbose=True):
     numBits = 8 * n
 
     if verbose:
-        print("\n=====B92 protocol=====\n%d initial bits, ~%d key bits") % (numBits, n)
+        print("\n=====B92 protocol=====\n%d initial bits, ~%d key bits" % (numBits, n))
         if eve: print("with eavesdropping")
         else: print("without eavesdropping")
         if errorRate: print("with channel noise")
@@ -123,7 +123,7 @@ def b92(n, eve=False, errorRate=0.0, verbose=True):
 
     # Alice generates a random bit string to be encoded
     rawKey = getRandomBits(numBits)
-    print("\nAlice generates %d random bits to be encoded:\n%s") % (numBits, bitFormat(rawKey))
+    print("\nAlice generates %d random bits to be encoded:\n%s" % (numBits, bitFormat(rawKey)))
 
     # Alice encodes each bit as a qubit as |0> in either the computational or Hadamard basis
     sent_A = encodeKeyB92(rawKey)
@@ -142,7 +142,7 @@ def b92(n, eve=False, errorRate=0.0, verbose=True):
 
         # Eve randomly selects a filter to use for each qubit
         bases_E = getRandomBits(numBits)
-        print("Eve chooses a random filter to measure each qubit with:\n%s") % bitFormat(bases_E)
+        print("Eve chooses a random filter to measure each qubit with:\n%s" % bitFormat(bases_E))
 
         # Eve measures each qubit and attempts to cover her tracks
         temp = []
@@ -167,8 +167,8 @@ def b92(n, eve=False, errorRate=0.0, verbose=True):
         if result == None: key_B.append(-1)
         else: key_B.append(result)
 
-    print("Bob chooses a random filter to measure each qubit with:\n%s") % bitFormat(bases_B)
-    print("Bob's measurement results:\n%s") % bitFormat(key_B)
+    print("Bob chooses a random filter to measure each qubit with:\n%s" % bitFormat(bases_B))
+    print("Bob's measurement results:\n%s" % bitFormat(key_B))
 
     # Discard bits where Bob did not see a result
     key_A, key_B = matchKeysB92(rawKey, key_B)
@@ -177,29 +177,29 @@ def b92(n, eve=False, errorRate=0.0, verbose=True):
     if verbose:
         print("\nBob announces which photons were completely absorbed and"\
           "\nAlice and Bob discard the corresponding bits from their keys.\n")
-    print("Alice's sifted key:\n%s") % bitFormat(key_A)
-    print("Bob's sifted key:\n%s") % bitFormat(key_B)
+    print("Alice's sifted key:\n%s" % bitFormat(key_A))
+    print("Bob's sifted key:\n%s" % bitFormat(key_B))
 
     # Compare key information
     if len(key_A) != len(key_B):
         print("\nAlice and Bob announce the lengths of their keys. Since Alice's"\
               "\nkey is %d bits and Bob's is %d bits, they are able to detect"\
-              "\nEve's interference and abort the protocol.\n") % (len(key_A), len(key_B))
+              "\nEve's interference and abort the protocol.\n" % (len(key_A), len(key_B)))
         return -1
 
     announce_A, key_A, announce_B, key_B = discloseHalf(key_A, key_B)
     if verbose:
         print("\nAlice and Bob sacrifice %d of their %d shared bits and publicly announce"\
-              "\ntheir values. They agree to disclose every other bit of their shared key.\n") % (len(announce_A), numBits)
-    print("Alice's announced bits:\n%s") % bitFormat(announce_A)
-    print("Bob's announced bits:\n%s") % bitFormat(announce_B)
+              "\ntheir values. They agree to disclose every other bit of their shared key.\n" % (len(announce_A), numBits))
+    print("Alice's announced bits:\n%s" % bitFormat(announce_A))
+    print("Bob's announced bits:\n%s" % bitFormat(announce_B))
 
     numBits = len(key_A)
-    print("Alice's remaining %d-bit key:\n%s") % (numBits, bitFormat(key_A))
-    print("Bob's remaining %d-bit key:\n%s") % (numBits, bitFormat(key_B))
+    print("Alice's remaining %d-bit key:\n%s" % (numBits, bitFormat(key_A)))
+    print("Bob's remaining %d-bit key:\n%s" % (numBits, bitFormat(key_B)))
 
-    print("Expected error rate: %f") % errorRate
-    print("Actual error rate: %f") % (float(sum([1 for k in range(len(key_A)) if key_A[k] != key_B[k]]))/len(key_A))
+    print("Expected error rate: %f" % errorRate)
+    print("Actual error rate: %f" % (float(sum([1 for k in range(len(key_A)) if key_A[k] != key_B[k]]))/len(key_A)))
 
     if detectEavesdrop(key_A, key_B, errorRate):
         print("\nAlice and Bob detect Eve's interference and abort the protocol.\n")
@@ -212,7 +212,7 @@ def e91(n, errorRate=0.0, verbose=True):
     numBits = 5 * n
 
     if verbose:
-        print("\n=====E91 protocol=====\n%d initial bits, ~%d key bits") % (numBits, n)
+        print("\n=====E91 protocol=====\n%d initial bits, ~%d key bits" % (numBits, n))
         print("without eavesdropping")
         if errorRate: print("with channel noise\n")
         else: print("without channel noise\n")
@@ -232,16 +232,16 @@ def e91(n, errorRate=0.0, verbose=True):
         key_A.append(new_A)
         key_B.append(new_B)
 
-    print("Alice's randomly chosen axes of measurement:\n%s") % formatBasesE91(bases_A)
-    print("Bob's randomly chosen axes of measurement:\n%s") % formatBasesE91(bases_B)
-    print("Alice's measurement results:\n%s") % bitFormat(key_A)
-    print("Bob's measurement results:\n%s") % bitFormat(key_B)
+    print("Alice's randomly chosen axes of measurement:\n%s" % formatBasesE91(bases_A))
+    print("Bob's randomly chosen axes of measurement:\n%s" % formatBasesE91(bases_B))
+    print("Alice's measurement results:\n%s" % bitFormat(key_A))
+    print("Bob's measurement results:\n%s" % bitFormat(key_B))
 
     key_A, key_B, discard_A, discard_B = matchKeysE91(key_A, key_B, bases_A, bases_B)
-    print("Alice's %d discarded bits:\n%s") % (len(discard_A), bitFormat(discard_A))
-    print("Bob's %d discarded bits:\n%s") % (len(discard_B), bitFormat(discard_B))
+    print("Alice's %d discarded bits:\n%s" % (len(discard_A), bitFormat(discard_A)))
+    print("Bob's %d discarded bits:\n%s" % (len(discard_B), bitFormat(discard_B)))
 
-    print("Alice's %d-bit sifted key:\n%s") % (len(key_A), bitFormat(key_A))
-    print("Bob's %d-bit sifted key:\n%s") % (len(key_B), bitFormat(key_B))
+    print("Alice's %d-bit sifted key:\n%s" % (len(key_A), bitFormat(key_A)))
+    print("Bob's %d-bit sifted key:\n%s" % (len(key_B), bitFormat(key_B)))
 
     return key_A
