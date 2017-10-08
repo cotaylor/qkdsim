@@ -1,8 +1,5 @@
-from qkdutils import *
-
-# TODO: testing
 import bb84, b92, e91
-import _qkdutils as util
+import qkdutils as util
 
 def simulateBB84(n, eve=False, errorRate=0.0, verbose=True):
     """Simulation of Bennett & Brassard's 1984 protocol for quantum key distribution with
@@ -249,3 +246,5 @@ def simulateE91(n, errorRate=0.0, verbose=True):
     print("Bob's %d-bit sifted key:\n%s" % (len(key_B), util.bitFormat(key_B)))
 
     return key_A
+
+simulateBB84(128)

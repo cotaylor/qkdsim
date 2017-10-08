@@ -1,6 +1,6 @@
 import numpy as np
 import qit
-import _qkdutils as util
+import qkdutils as util
 
 def simulateNoise(bits, errorRate):
     """Simulate channel noise, each bit can be flipped with probability given by errorRate."""

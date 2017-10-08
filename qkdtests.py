@@ -1,25 +1,26 @@
-from qkdutils import *
+import qkdutils as util
 from math import pi
 import qit
 import numpy as np
 import protocols
+import bb84, b92, e91
 
-def test_bb84():
+def test_simulateBB84():
     numTrials = 20
     numBits = 2048
 
     for j in range(numTrials):
-        assert(len(protocols.bb84(numBits, False, 0.0, False)) >= 3*numBits/4)
-        assert(protocols.bb84(numBits, True, 0.0, False) == -1)
+        assert(len(protocols.simulateBB84(numBits, False, 0.0, False)) >= 3*numBits/4)
+        assert(protocols.simulateBB84(numBits, True, 0.0, False) == -1)
 
 
-def test_b92():
+def test_simulateB92():
     numTrials = 20
     numBits = 2048
 
     for j in range(numTrials):
-        assert(len(protocols.b92(numBits, False, 0.0, False)) >= 3*numBits/4)
-        assert(protocols.b92(numBits, True, 0.0, False) == -1)
+        assert(len(protocols.simulateB92(numBits, False, 0.0, False)) >= 3*numBits/4)
+        assert(protocols.simulateB92(numBits, True, 0.0, False) == -1)
 
 
 def test_decodeStateB92():
@@ -28,8 +29,8 @@ def test_decodeStateB92():
     # If sent not measured, nothing comes through the filter
     numTrials = 50
     numBits = 1024
-    sent = getRandomBits(numBits)
-    bases = getRandomBits(numBits)
+    sent = util.getRandomBits(numBits)
+    bases = util.getRandomBits(numBits)
     tolerance = 0.05
 
     for j in range(numTrials):
@@ -39,7 +40,7 @@ def test_decodeStateB92():
             q = qit.state('0')
             if sent[k]: q = q.u_propagate(qit.H)
 
-            result = decodeStateB92(q, bases[k])
+            result = b92.decodeState(q, bases[k])
             if result != None:
                 seen += 1
                 assert(result == sent[k])
@@ -52,13 +53,13 @@ def test_decodeStateB92():
 def test_decodeStateBB84_deterministic():
     # Test deterministic cases
     q = qit.state('0')
-    assert(decodeStateBB84(q, 0) == False)
+    assert(bb84.decodeState(q, 0) == False)
     q = q.u_propagate(qit.H)
-    assert(decodeStateBB84(q, 1) == False)
+    assert(bb84.decodeState(q, 1) == False)
     q  = qit.state('1')
-    assert(decodeStateBB84(q, 0) == True)
+    assert(bb84.decodeState(q, 0) == True)
     q = q.u_propagate(qit.H)
-    assert(decodeStateBB84(q, 1) == True)
+    assert(bb84.decodeState(q, 1) == True)
 
 
 def test_decodeStateBB84_probabilistic():
@@ -69,25 +70,25 @@ def test_decodeStateBB84_probabilistic():
     q = qit.state('0')
     counts = [0, 0]
     for j in range(numTrials):
-        counts[decodeStateBB84(q, 1)] += 1
+        counts[bb84.decodeState(q, 1)] += 1
     assert abs(counts[0] - counts[1]) < tolerance
 
     q = q.u_propagate(qit.H)
     counts = [0, 0]
     for j in range(numTrials):
-        counts[decodeStateBB84(q, 0)] += 1
+        counts[bb84.decodeState(q, 0)] += 1
     assert(abs(counts[0] - counts[1]) < tolerance)
 
     q = qit.state('1')
     counts = [0, 0]
     for j in range(numTrials):
-        counts[decodeStateBB84(q, 1)] += 1
+        counts[bb84.decodeState(q, 1)] += 1
     assert(abs(counts[0] - counts[1]) < tolerance)
 
     q = q.u_propagate(qit.H)
     counts = [0, 0]
     for j in range(numTrials):
-        counts[decodeStateBB84(q, 0)] += 1
+        counts[bb84.decodeState(q, 0)] += 1
     assert(abs(counts[0] - counts[1]) < tolerance)
 
 
@@ -95,27 +96,27 @@ def test_discloseHalf():
     numTrials = 128
 
     for j in range(numTrials):
-        key1 = getRandomBits(j)
-        key2 = getRandomBits(j)
-        announce1, key1, announce2, key2 = discloseHalf(key1, key2)
+        key1 = util.getRandomBits(j)
+        key2 = util.getRandomBits(j)
+        announce1, key1, announce2, key2 = util.discloseHalf(key1, key2)
         assert(len(key1) + len(announce1) == j)
         assert(len(key2) + len(announce2) == j)
 
 
-def test_e91():
+def test_simulateE91():
     numTrials = 20
     numBits = 2048
 
     for j in range(numTrials):
-        assert(len(protocols.e91(numBits)) >= 3*numBits/4)
+        assert(len(protocols.simulateE91(numBits)) >= 3*numBits/4)
 
 
 def test_encodeBitBB84():
     # Only test the 4 cases in our encoding strategy
-    assert(equivState(encodeBitBB84(0,0), qit.state('0')))
-    assert(equivState(encodeBitBB84(1,0), qit.state('1')))
-    assert(equivState(encodeBitBB84(0,1), qit.state('0').u_propagate(qit.H)))
-    assert(equivState(encodeBitBB84(1,1), qit.state('1').u_propagate(qit.H)))
+    assert(util.equivState(bb84.encodeBit(0,0), qit.state('0')))
+    assert(util.equivState(bb84.encodeBit(1,0), qit.state('1')))
+    assert(util.equivState(bb84.encodeBit(0,1), qit.state('0').u_propagate(qit.H)))
+    assert(util.equivState(bb84.encodeBit(1,1), qit.state('1').u_propagate(qit.H)))
 
 
 def test_getRandomBits():
@@ -125,7 +126,7 @@ def test_getRandomBits():
     tolerance = 0.1 * numBits
 
     for j in range(numTrials):
-        bits = getRandomBits(numBits)
+        bits = util.getRandomBits(numBits)
         counts[0] = len([j for j in bits if j==0])
         counts[1] = len([j for j in bits if j==1])
         print(abs(counts[0]-counts[1]))
@@ -137,15 +138,15 @@ def test_matchKeysBB84():
     numBits = 256
 
     for j in range(numTrials):
-        key1 = getRandomBits(numBits)
-        bases1 = getRandomBits(numBits)
-        sent = encodeKeyBB84(key1, bases1)
-        bases2 = getRandomBits(numBits)
+        key1 = util.getRandomBits(numBits)
+        bases1 = util.getRandomBits(numBits)
+        sent = bb84.encodeKey(key1, bases1)
+        bases2 = util.getRandomBits(numBits)
         key2 = []
         for k in range(numBits):
-            key2.append(decodeStateBB84(sent[k], bases2[k]))
+            key2.append(bb84.decodeState(sent[k], bases2[k]))
 
-        result1, result2 = matchKeysBB84(key1, key2, bases1, bases2)
+        result1, result2 = bb84.matchKeys(key1, key2, bases1, bases2)
         assert(result1 == result2)
 
 
@@ -153,7 +154,7 @@ def test_measureEntangledState():
     numTrials = 10000
 
     for j in range(numTrials):
-        (basisA, basisB) = chooseAxesE91(1)
-        (A, B) = measureEntangledState(basisA[0], basisB[0])
+        (basisA, basisB) = e91.chooseAxes(1)
+        (A, B) = e91.measureEntangledState(basisA[0], basisB[0])
         if basisA == basisB:
             assert(A != B)    # Bob's result must be anti-correlated with Alice's
