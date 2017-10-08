@@ -1,6 +1,9 @@
 # Latex
 *.aux
 *.log
+*.tex
+*.cls
+images/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -91,7 +94,3 @@ ENV/
 
 # Rope project settings
 .ropeproject
-
-# tex
-.cls
-/images
