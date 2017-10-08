@@ -4,6 +4,4 @@
 nose
 pycrypto
 qit
-numpy
-scipy
 #
