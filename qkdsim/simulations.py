@@ -1,5 +1,7 @@
-import bb84, b92, e91
-import qkdutils as util
+import qkdsim.bb84 as bb84
+import qkdsim.b92 as b92
+import qkdsim.e91 as e91
+import qkdsim.qkdutils as util
 
 def simulateBB84(n, eve=False, errorRate=0.0, verbose=True):
     """Simulation of Bennett & Brassard's 1984 protocol for quantum key distribution with
