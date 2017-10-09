@@ -248,5 +248,3 @@ def runE91(n, errorRate=0.0, verbose=True):
     print("Bob's %d-bit sifted key:\n%s" % (len(key_B), util.bitFormat(key_B)))
 
     return key_A
-
-simulateBB84(128)
