@@ -3,7 +3,7 @@ import qkdsim.b92 as b92
 import qkdsim.e91 as e91
 import qkdsim.qkdutils as util
 
-def simulateBB84(n, eve=False, errorRate=0.0, verbose=True):
+def runBB84(n, eve=False, errorRate=0.0, verbose=True):
     """Simulation of Bennett & Brassard's 1984 protocol for quantum key distribution with
     n initial bits in the raw key.
     If eve is set to True, assumes the presence of an eavesdropper attempting an
@@ -108,7 +108,7 @@ def simulateBB84(n, eve=False, errorRate=0.0, verbose=True):
 
     return key_A
 
-def simulateB92(n, eve=False, errorRate=0.0, verbose=True):
+def runB92(n, eve=False, errorRate=0.0, verbose=True):
     """Simulation of Bennet's 1992 protocol for quantum key distribution with n initial
     bits in the raw key. If eve is set to True, assumes the presence of an eavesdropper
     attempting an intercept-resend attack. errorRate represents the probability that a bit
@@ -210,7 +210,7 @@ def simulateB92(n, eve=False, errorRate=0.0, verbose=True):
 
     return key_A
 
-def simulateE91(n, errorRate=0.0, verbose=True):
+def runE91(n, errorRate=0.0, verbose=True):
     """Simulation of Ekert's 1991 entanglement-based protocol for quantum key distribution."""
     numBits = 5 * n
 

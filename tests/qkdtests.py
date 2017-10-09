@@ -5,13 +5,13 @@ import numpy as np
 import protocols
 import bb84, b92, e91
 
-def test_simulateBB84():
+def test_runBB84():
     numTrials = 20
     numBits = 2048
 
     for j in range(numTrials):
-        assert(len(protocols.simulateBB84(numBits, False, 0.0, False)) >= 3*numBits/4)
-        assert(protocols.simulateBB84(numBits, True, 0.0, False) == -1)
+        assert(len(simulations.runBB84(numBits, False, 0.0, False)) >= 3*numBits/4)
+        assert(simulations.runBB84(numBits, True, 0.0, False) == -1)
 
 
 def test_simulateB92():
@@ -19,8 +19,8 @@ def test_simulateB92():
     numBits = 2048
 
     for j in range(numTrials):
-        assert(len(protocols.simulateB92(numBits, False, 0.0, False)) >= 3*numBits/4)
-        assert(protocols.simulateB92(numBits, True, 0.0, False) == -1)
+        assert(len(simulations.runB92(numBits, False, 0.0, False)) >= 3*numBits/4)
+        assert(simulations.runB92(numBits, True, 0.0, False) == -1)
 
 
 def test_decodeStateB92():
@@ -108,7 +108,7 @@ def test_simulateE91():
     numBits = 2048
 
     for j in range(numTrials):
-        assert(len(protocols.simulateE91(numBits)) >= 3*numBits/4)
+        assert(len(simulations.runE91(numBits)) >= 3*numBits/4)
 
 
 def test_encodeBitBB84():
