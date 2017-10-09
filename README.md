@@ -5,7 +5,7 @@ Includes a survey and simulation of the BB84, B92, and E91 protocols for quantum
 
 ## Installation
 ```bash
-pip install -r requirements.txt\
+pip install -r requirements.txt
 python setup.py install
 ```
 
