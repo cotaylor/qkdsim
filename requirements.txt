@@ -1,7 +1,1 @@
-#
-##### requirements.txt #####
-#
-nose
-pycrypto
-qit
-#
+.
