@@ -4,12 +4,16 @@ Quantum Key Distribution simulation project for CSCI498: Introduction to Quantum
 Includes a survey and simulation of the BB84, B92, and E91 protocols for quantum key distribution, as well as solutions to selected exercises from Nielsen \& Chuang's _Quantum Computation and Quantum Information_.
 
 ## Installation
-$ pip install -r requirements.txt
-$ python setup.py install
+```bash
+pip install -r requirements.txt\
+python setup.py install
+```
 
 ## Example Usage
->>> import qkdsim.simulations as sim
->>> sim.runBB84(<keylen>)
+```python
+import qkdsim.simulations as sim
+sim.runBB84(<keylen>)
+```
 
 ## Modules used:
 NumPy - www.numpy.org
