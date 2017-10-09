@@ -1,5 +1,4 @@
-from distutils.core import setup
-from pip.req import parse_requirements
+from setuptools import setup, find_packages
 
 setup(name='qkdsim',
       version='1.0',
@@ -7,7 +6,7 @@ setup(name='qkdsim',
       author='Conner Taylor',
       author_email='cmtaylor15@gmail.com',
       url='https://github.com/cotaylor/qkdsim',
-      packages=['qkdsim'],
+      packages=find_packages(),
       install_requires=[
           'qit',
           'pycrypto'
