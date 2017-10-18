@@ -10,7 +10,7 @@ def runBB84(n, eve=False, errorRate=0.0, verbose=True):
         errorRate: probability of a bit flip during transmission
     """
     ##### STAGE 1: RAWKEY AND BASIS GENERATION #####
-    numBits = 5 * n
+    numBits = 10 * n
     if verbose: bb84.printStage0(numBits, n, eve, errorRate)
         
     # Alice generates a random bit string to be encoded
@@ -71,8 +71,9 @@ def runBB84(n, eve=False, errorRate=0.0, verbose=True):
         print("\nAlice and Bob detect Eve's interference and abort the protocol.")
         return -1
     ##### END STAGE 5 #####
-    
-    bb84.printFinalKeys(numBits, key_A, key_B)
+
+    key_A, key_B = util.trimKeys(n, key_A, key_B)
+    bb84.printFinalKeys(n, key_A, key_B)
     return 0
 
 def runB92(n, eve=False, errorRate=0.0, verbose=True):

@@ -53,3 +53,6 @@ def getRandomBits(length):
     for j in range(length):
         bitstring.append(random.choice([True, False]))
     return bitstring
+
+def trimKeys(length, key_A, key_B):
+    return (key_A[:length], key_B[:length])

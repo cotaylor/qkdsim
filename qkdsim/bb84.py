@@ -81,7 +81,7 @@ def matchKeys(key1, key2, bases1, bases2):
 # TODO: this is a little awkward
 def printStage0(numInitialBits, numTargetBits, eve, errorRate):
     # Initialization
-    print("\n=====BB84 protocol=====\n%d initial bits, ~%d key bits" % (numInitialBits, numTargetBits))
+    print("\n=====BB84 protocol=====\n%d initial bits, %d key bits" % (numInitialBits, numTargetBits))
     if eve: print("with eavesdropping")
     else: print("without eavesdropping")
     if errorRate: print("with channel noise")
@@ -89,7 +89,7 @@ def printStage0(numInitialBits, numTargetBits, eve, errorRate):
 
 def printStage1(numBits, rawKey, bases, verbose):
     # Raw key/basis generation
-    print("\nAlice generates %d random bits to be encoded:\n%s" % (numBits, util.bitFormat(rawKey)))
+    print("\nAlice generates %d random bits as the raw key to be encoded:\n%s" % (numBits, util.bitFormat(rawKey)))
     print("For each bit, Alice randomly chooses one of two non-orthogonal sets of bases:\n%s" % util.bitFormat(bases))
 
     if verbose:
