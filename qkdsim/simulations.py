@@ -4,10 +4,10 @@ import qkdsim.e91 as e91
 import qkdsim.qkdutils as util
 
 def runBB84(n, eve=False, errorRate=0.0, verbose=True):
-    """Simulation of Bennett & Brassard's 1984 protocol for quantum key distribution with
-    n initial bits in the raw key.
-    If eve is set to True, assumes the presence of an eavesdropper attempting an
-    intercept-resend attack.
+    """Simulation of Bennett & Brassard's 1984 protocol for quantum key distribution
+        n: number of desired key bits
+        eve: indicates the presence or absence of an eavesdropper
+        errorRate: probability of a bit flip during transmission
     """
     ##### STAGE 1: RAWKEY AND BASIS GENERATION #####
     numBits = 5 * n
@@ -74,8 +74,6 @@ def runBB84(n, eve=False, errorRate=0.0, verbose=True):
     
     bb84.printFinalKeys(numBits, key_A, key_B)
     return 0
-#    return key_A     # TODO: should this return a key or error code?
-
 
 def runB92(n, eve=False, errorRate=0.0, verbose=True):
     """Simulation of Bennet's 1992 protocol for quantum key distribution with n initial
